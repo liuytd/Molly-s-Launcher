@@ -2,9 +2,10 @@
   "version": "1.2.0",
   "downloadUrl": "https://github.com/liuytd/Molly-s-Launcher/releases/download/v1.2.0/MollysLauncher-setup.exe",
   "changelog": [
-    "Removed star/favorite button from game cards",
-    "Cleaner card design",
-    "Simplified UI"
+    "New left sidebar with icon-only navigation",
+    "Favorites, Discord, Website, and Settings icons",
+    "Removed header buttons for cleaner UI",
+    "Card spacing fixed with gap-6"
   ]
 }
 
