@@ -95,38 +95,30 @@ export default function Home() {
   return (
     <div className="h-full flex flex-col p-4 overflow-hidden">
       {/* Header */}
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-4">
-          {/* Filter buttons */}
-          <button
-            onClick={() => setFilter('all')}
-            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm transition-all ${
-              filter === 'all'
-                ? 'bg-[var(--color-primary)]/20 text-[var(--color-primary)] border border-[var(--color-primary)]/50'
-                : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text)]'
-            }`}
-          >
-            <Package size={14} />
-            All Products
-          </button>
-          <button
-            onClick={() => setFilter('favorites')}
-            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm transition-all ${
-              filter === 'favorites'
-                ? 'bg-[var(--color-primary)]/20 text-[var(--color-primary)] border border-[var(--color-primary)]/50'
-                : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text)]'
-            }`}
-          >
-            <Star size={14} />
-            Favorites ({favorites.length})
-          </button>
-        </div>
-
-        {/* Cache info */}
-        <div className="flex items-center gap-2 text-xs text-[var(--color-text-muted)]">
-          <HardDrive size={12} />
-          <span>Cache: {cacheSize}</span>
-        </div>
+      <div className="flex items-center gap-4 mb-4">
+        {/* Filter buttons */}
+        <button
+          onClick={() => setFilter('all')}
+          className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm transition-all ${
+            filter === 'all'
+              ? 'bg-[var(--color-primary)]/20 text-[var(--color-primary)] border border-[var(--color-primary)]/50'
+              : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text)]'
+          }`}
+        >
+          <Package size={14} />
+          All Products
+        </button>
+        <button
+          onClick={() => setFilter('favorites')}
+          className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm transition-all ${
+            filter === 'favorites'
+              ? 'bg-[var(--color-primary)]/20 text-[var(--color-primary)] border border-[var(--color-primary)]/50'
+              : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text)]'
+          }`}
+        >
+          <Star size={14} />
+          Favorites ({favorites.length})
+        </button>
       </div>
 
       {/* Products grid */}
@@ -142,7 +134,7 @@ export default function Home() {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-3 gap-3">
+          <div className="space-y-2">
             {filteredProducts.map((product, index) => (
               <ProductCard
                 key={product.id}

@@ -62,11 +62,12 @@ export default function App() {
       setLoadingText('CHECKING FOR UPDATES...')
       await new Promise(r => setTimeout(r, 800))
 
-      // Check for actual updates
+      // Check for actual updates (only show popup if update is actually available and downloadable)
       if (window.api) {
         try {
           const result = await window.api.checkForUpdates()
-          if (result.updateAvailable) {
+          // Only show popup if success is true and update is available (not in dev mode)
+          if (result.success && result.updateAvailable) {
             setUpdateInfo(result)
             setShowUpdatePopup(true)
           }

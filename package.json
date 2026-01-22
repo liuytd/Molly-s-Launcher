@@ -1,6 +1,6 @@
 {
   "name": "mollys-launcher",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Mollys Launcher - MultiLoader for Mollys products",
   "main": "./out/main/index.js",
   "author": "liuytd",
@@ -62,7 +62,6 @@
       "resources/**/*.png"
     ],
     "win": {
-      "icon": "build/icon.ico",
       "target": [
         {
           "target": "nsis",
@@ -80,9 +79,6 @@
       "deleteAppDataOnUninstall": true,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "installerIcon": "build/installerIcon.ico",
-      "uninstallerIcon": "build/uninstallerIcon.ico",
-      "installerHeaderIcon": "build/installerIcon.ico",
       "shortcutName": "Mollys Launcher"
     },
     "publish": {

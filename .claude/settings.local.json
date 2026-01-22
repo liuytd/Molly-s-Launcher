@@ -10,7 +10,8 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(git config user.email \"liuytd@users.noreply.github.com\")",
-      "Bash(git config:*)"
+      "Bash(git config:*)",
+      "Bash(npm run build:win:*)"
     ]
   }
 }
