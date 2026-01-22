@@ -5,7 +5,8 @@ import { get as httpsGet } from 'https'
 import { exec } from 'child_process'
 import log from 'electron-log'
 
-const VERSION_URL = 'https://raw.githubusercontent.com/liuytd/Molly-s-Launcher/main/version.ml.json'
+// Use GitHub API instead of raw.githubusercontent.com to avoid aggressive caching
+const VERSION_URL = 'https://api.github.com/repos/liuytd/Molly-s-Launcher/contents/version.ml.json'
 let mainWindow = null
 let updateCheckInterval = null
 
@@ -40,9 +41,14 @@ async function checkForUpdates() {
   try {
     log.info('Checking for updates from GitHub...')
 
-    // Add timestamp to bypass GitHub cache
-    const cacheBustUrl = `${VERSION_URL}?t=${Date.now()}`
-    const versionData = await fetchJSON(cacheBustUrl)
+    // Add timestamp to bypass cache
+    const cacheBustUrl = `${VERSION_URL}?ref=main&t=${Date.now()}`
+    const apiResponse = await fetchJSON(cacheBustUrl)
+
+    // Decode base64 content from GitHub API
+    const content = Buffer.from(apiResponse.content, 'base64').toString('utf-8')
+    const versionData = JSON.parse(content)
+
     const currentVersion = app.getVersion()
     const latestVersion = versionData.version
 
@@ -202,6 +208,8 @@ function fetchJSON(url) {
   return new Promise((resolve, reject) => {
     const options = {
       headers: {
+        'User-Agent': 'Mollys-Launcher',
+        'Accept': 'application/vnd.github.v3+json',
         'Cache-Control': 'no-cache, no-store, must-revalidate',
         'Pragma': 'no-cache',
         'Expires': '0'
