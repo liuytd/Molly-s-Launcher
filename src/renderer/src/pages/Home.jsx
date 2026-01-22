@@ -61,7 +61,7 @@ export default function Home() {
   return (
     <div className="h-full flex overflow-hidden">
       {/* Left Sidebar */}
-      <div className="w-16 flex flex-col items-center gap-4 py-4 border-r border-[var(--color-border)]">
+      <div className="w-16 flex flex-col items-center justify-center gap-4 py-4 border-r border-[var(--color-border)]">
         {/* Favorites */}
         <button
           onClick={() => setFilter(filter === 'favorites' ? 'all' : 'favorites')}

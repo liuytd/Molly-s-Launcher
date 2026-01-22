@@ -1,11 +1,9 @@
 {
-  "version": "1.2.1",
-  "downloadUrl": "https://github.com/liuytd/Molly-s-Launcher/releases/download/v1.2.1/MollysLauncher-setup.exe",
+  "version": "1.2.2",
+  "downloadUrl": "https://github.com/liuytd/Molly-s-Launcher/releases/download/v1.2.2/MollysLauncher-setup.exe",
   "changelog": [
-    "Left sidebar with icon navigation",
-    "Favorites, Discord, Website, Settings",
-    "Cleaner UI design",
-    "Fixed card spacing"
+    "Vertically centered sidebar icons",
+    "Improved sidebar layout"
   ]
 }
 
