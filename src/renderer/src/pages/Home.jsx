@@ -61,7 +61,7 @@ export default function Home() {
   return (
     <div className="h-full flex overflow-hidden">
       {/* Left Sidebar */}
-      <div className="w-16 flex flex-col items-center justify-center gap-4 py-4 border-r border-[var(--color-border)]">
+      <div className="w-16 flex flex-col items-center justify-center gap-4 py-4">
         {/* All Products */}
         <button
           onClick={() => setFilter('all')}
@@ -87,8 +87,6 @@ export default function Home() {
         >
           <Star size={20} className={filter === 'favorites' ? 'fill-current' : ''} />
         </button>
-
-        <div className="w-8 h-px bg-[var(--color-border)]"></div>
 
         {/* Discord */}
         <button
@@ -119,33 +117,32 @@ export default function Home() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col p-4 overflow-hidden">
-
-      {/* Products grid */}
-      <div className="flex-1 overflow-y-auto overflow-x-hidden scrollbar-hidden">
-        {filteredProducts.length === 0 ? (
-          <div className="h-full flex flex-col items-center justify-center text-center">
-            <Star size={48} className="text-[var(--color-text-muted)] mb-4" />
-            <p className="text-[var(--color-text-secondary)]">
-              {filter === 'favorites' ? 'No favorites yet' : 'No products available'}
-            </p>
-            <p className="text-sm text-[var(--color-text-muted)]">
-              {filter === 'favorites' && 'Click the star icon to add favorites'}
-            </p>
-          </div>
-        ) : (
-          <div className="flex flex-col items-center gap-6">
-            {filteredProducts.map((product, index) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                onClick={() => handleProductClick(product.id)}
-                style={{ animationDelay: `${index * 50}ms` }}
-              />
-            ))}
-          </div>
-        )}
-      </div>
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Products grid */}
+        <div className="flex-1 overflow-y-auto overflow-x-hidden scrollbar-hidden pt-4">
+          {filteredProducts.length === 0 ? (
+            <div className="h-full flex flex-col items-center justify-center text-center">
+              <Star size={48} className="text-[var(--color-text-muted)] mb-4" />
+              <p className="text-[var(--color-text-secondary)]">
+                {filter === 'favorites' ? 'No favorites yet' : 'No products available'}
+              </p>
+              <p className="text-sm text-[var(--color-text-muted)]">
+                {filter === 'favorites' && 'Click the star icon to add favorites'}
+              </p>
+            </div>
+          ) : (
+            <div className="flex flex-col items-center gap-3 pb-4">
+              {filteredProducts.map((product, index) => (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  onClick={() => handleProductClick(product.id)}
+                  style={{ animationDelay: `${index * 50}ms` }}
+                />
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   )
