@@ -1,0 +1,95 @@
+{
+  "name": "mollys-launcher",
+  "version": "1.0.0",
+  "description": "Mollys Launcher - MultiLoader for Mollys products",
+  "main": "./out/main/index.js",
+  "author": "liuytd",
+  "homepage": "https://github.com/liuytd/Molly-s-Launcher",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/liuytd/Molly-s-Launcher.git"
+  },
+  "scripts": {
+    "dev": "electron-vite dev",
+    "build": "electron-vite build",
+    "build:win": "npm run build && electron-builder --win --config",
+    "build:production": "npm run build && electron-builder --win --config",
+    "preview": "electron-vite preview",
+    "lint": "eslint . --ext .js,.jsx",
+    "format": "prettier --write ."
+  },
+  "dependencies": {
+    "@electron-toolkit/preload": "^3.0.1",
+    "@electron-toolkit/utils": "^4.0.0",
+    "@tailwindcss/postcss": "^4.1.18",
+    "clsx": "^2.1.1",
+    "electron-log": "^5.4.3",
+    "electron-store": "^8.1.0",
+    "electron-updater": "^6.3.9",
+    "lucide-react": "^0.542.0",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "react-router-dom": "^7.8.2",
+    "react-toastify": "^11.0.5"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.5.2",
+    "autoprefixer": "^10.4.21",
+    "electron": "^38.0.0",
+    "electron-builder": "^26.0.12",
+    "electron-vite": "^4.0.0",
+    "eslint": "^9.28.0",
+    "postcss": "^8.5.4",
+    "prettier": "^3.6.2",
+    "tailwindcss": "^4.1.14",
+    "vite": "^6.3.5"
+  },
+  "build": {
+    "appId": "com.mollys.launcher",
+    "productName": "Mollys Launcher",
+    "artifactName": "MollysLauncher-setup.${ext}",
+    "directories": {
+      "buildResources": "build",
+      "output": "dist"
+    },
+    "files": [
+      "out/**/*",
+      "resources/**/*"
+    ],
+    "asarUnpack": [
+      "resources/**/*.exe",
+      "resources/**/*.ico",
+      "resources/**/*.png"
+    ],
+    "win": {
+      "icon": "build/icon.ico",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "requestedExecutionLevel": "requireAdministrator"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": true,
+      "allowToChangeInstallationDirectory": false,
+      "deleteAppDataOnUninstall": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "installerIcon": "build/installerIcon.ico",
+      "uninstallerIcon": "build/uninstallerIcon.ico",
+      "installerHeaderIcon": "build/installerIcon.ico",
+      "shortcutName": "Mollys Launcher"
+    },
+    "publish": {
+      "provider": "github",
+      "owner": "liuytd",
+      "repo": "Molly-s-Launcher",
+      "releaseType": "release"
+    }
+  }
+}
