@@ -1,6 +1,4 @@
-import { Star } from 'lucide-react'
-
-export default function ProductCard({ product, isFavorite, onToggleFavorite, onClick, style }) {
+export default function ProductCard({ product, onClick, style }) {
   return (
     <div
       onClick={onClick}
@@ -28,21 +26,6 @@ export default function ProductCard({ product, isFavorite, onToggleFavorite, onC
           {product.exeCount} product{product.exeCount !== 1 ? 's' : ''}
         </p>
       </div>
-
-      {/* Favorite button */}
-      <button
-        onClick={(e) => onToggleFavorite(product.id, e)}
-        className="p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-[var(--color-primary)]/20 flex-shrink-0"
-      >
-        <Star
-          size={16}
-          className={`transition-colors ${
-            isFavorite
-              ? 'fill-yellow-400 text-yellow-400'
-              : 'text-[var(--color-text-muted)] hover:text-yellow-400'
-          }`}
-        />
-      </button>
 
       {/* Left border indicator */}
       <div

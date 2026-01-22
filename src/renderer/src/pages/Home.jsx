@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Star, Package, HardDrive } from 'lucide-react'
+import { Star, MessageCircle, Globe, Key } from 'lucide-react'
 import ProductCard from '../components/ProductCard'
 
 export default function Home() {
@@ -59,33 +59,54 @@ export default function Home() {
     : products
 
   return (
-    <div className="h-full flex flex-col p-4 overflow-hidden">
-      {/* Header */}
-      <div className="flex items-center gap-4 mb-4">
-        {/* Filter buttons */}
+    <div className="h-full flex overflow-hidden">
+      {/* Left Sidebar */}
+      <div className="w-16 flex flex-col items-center gap-4 py-4 border-r border-[var(--color-border)]">
+        {/* Favorites */}
         <button
-          onClick={() => setFilter('all')}
-          className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm transition-all ${
-            filter === 'all'
-              ? 'bg-[var(--color-primary)]/20 text-[var(--color-primary)] border border-[var(--color-primary)]/50'
-              : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text)]'
-          }`}
-        >
-          <Package size={14} />
-          All Products
-        </button>
-        <button
-          onClick={() => setFilter('favorites')}
-          className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm transition-all ${
+          onClick={() => setFilter(filter === 'favorites' ? 'all' : 'favorites')}
+          className={`p-3 rounded-lg transition-all ${
             filter === 'favorites'
-              ? 'bg-[var(--color-primary)]/20 text-[var(--color-primary)] border border-[var(--color-primary)]/50'
-              : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text)]'
+              ? 'bg-[var(--color-primary)]/20 text-[var(--color-primary)]'
+              : 'text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:bg-[var(--color-primary)]/10'
           }`}
+          title="Favorites"
         >
-          <Star size={14} />
-          Favorites ({favorites.length})
+          <Star size={20} className={filter === 'favorites' ? 'fill-current' : ''} />
+        </button>
+
+        <div className="w-8 h-px bg-[var(--color-border)]"></div>
+
+        {/* Discord */}
+        <button
+          onClick={() => window.open('https://discord.gg/your-server', '_blank')}
+          className="p-3 rounded-lg text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:bg-[var(--color-primary)]/10 transition-all"
+          title="Discord"
+        >
+          <MessageCircle size={20} />
+        </button>
+
+        {/* Website */}
+        <button
+          onClick={() => window.open('https://your-website.com', '_blank')}
+          className="p-3 rounded-lg text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:bg-[var(--color-primary)]/10 transition-all"
+          title="Website"
+        >
+          <Globe size={20} />
+        </button>
+
+        {/* Settings/Key */}
+        <button
+          onClick={() => navigate('/settings')}
+          className="p-3 rounded-lg text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:bg-[var(--color-primary)]/10 transition-all"
+          title="Settings"
+        >
+          <Key size={20} />
         </button>
       </div>
+
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col p-4 overflow-hidden">
 
       {/* Products grid */}
       <div className="flex-1 overflow-y-auto overflow-x-hidden scrollbar-hidden">
@@ -105,14 +126,13 @@ export default function Home() {
               <ProductCard
                 key={product.id}
                 product={product}
-                isFavorite={favorites.includes(product.id)}
-                onToggleFavorite={handleToggleFavorite}
                 onClick={() => handleProductClick(product.id)}
                 style={{ animationDelay: `${index * 50}ms` }}
               />
             ))}
           </div>
         )}
+      </div>
       </div>
     </div>
   )

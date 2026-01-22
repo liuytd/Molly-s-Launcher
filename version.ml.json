@@ -1,10 +1,10 @@
 {
-  "version": "1.1.9",
-  "downloadUrl": "https://github.com/liuytd/Molly-s-Launcher/releases/download/v1.1.9/MollysLauncher-setup.exe",
+  "version": "1.2.0",
+  "downloadUrl": "https://github.com/liuytd/Molly-s-Launcher/releases/download/v1.2.0/MollysLauncher-setup.exe",
   "changelog": [
-    "Fixed card spacing using gap-6 on container",
-    "Proper 24px separation between cards",
-    "Removed unnecessary mb-6 from cards"
+    "Removed star/favorite button from game cards",
+    "Cleaner card design",
+    "Simplified UI"
   ]
 }
 
