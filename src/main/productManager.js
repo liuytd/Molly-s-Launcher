@@ -5,6 +5,7 @@ import { get as httpsGet } from 'https'
 import log from 'electron-log'
 
 const LOADER_VERSIONS_URL = 'https://raw.githubusercontent.com/liuytd/Molly-s-Launcher/main/loader_versions.json'
+const VERSION_ML_URL = 'https://raw.githubusercontent.com/liuytd/Molly-s-Launcher/main/version.ml.json'
 const MOLLY_FOLDER = 'C:\\Launcher_Mollys'
 const LOCAL_LOADER_VERSIONS = join(MOLLY_FOLDER, 'loader_versions.json')
 const LOCAL_VERSION_ML = join(MOLLY_FOLDER, 'version.ml.json')
@@ -133,6 +134,15 @@ async function syncProductsWithGithub() {
     // Save to local file
     writeFileSync(LOCAL_LOADER_VERSIONS, JSON.stringify(remoteData, null, 2))
     log.info('Products synced successfully')
+
+    // Fetch and save version.ml.json
+    try {
+      const versionData = await fetchJSON(VERSION_ML_URL)
+      writeFileSync(LOCAL_VERSION_ML, JSON.stringify(versionData, null, 2))
+      log.info('version.ml.json synced successfully')
+    } catch (error) {
+      log.error('Error syncing version.ml.json:', error)
+    }
 
     // Create product folders if they don't exist
     for (const [id, product] of Object.entries(remoteData)) {

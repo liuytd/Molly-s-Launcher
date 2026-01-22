@@ -1,9 +1,9 @@
 {
-  "version": "1.0.6",
-  "downloadUrl": "https://github.com/liuytd/Molly-s-Launcher/releases/download/v1.0.6/MollysLauncher-setup.exe",
+  "version": "1.0.7",
+  "downloadUrl": "https://github.com/liuytd/Molly-s-Launcher/releases/download/v1.0.7/MollysLauncher-setup.exe",
   "changelog": [
-    "Renamed folder to C:\\Launcher_Mollys",
-    "Game categories now show game names",
-    "Improved product organization"
+    "Auto-sync version.ml.json from GitHub",
+    "Both JSON files now download automatically",
+    "Fixed product synchronization on startup"
   ]
 }
