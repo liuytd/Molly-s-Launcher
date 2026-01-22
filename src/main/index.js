@@ -4,6 +4,7 @@ import Store from 'electron-store'
 import log from 'electron-log'
 import { setupCustomUpdater } from './customUpdater.js'
 import { setupDownloader } from './downloader.js'
+import { setupProductManager } from './productManager.js'
 
 // Check if in development mode (will be set after app is ready)
 let isDev = process.env.NODE_ENV === 'development' || !!(process.env.ELECTRON_RENDERER_URL)
@@ -137,6 +138,9 @@ app.whenReady().then(() => {
 
   // Setup custom updater
   setupCustomUpdater(mainWindow)
+
+  // Setup product manager
+  setupProductManager(mainWindow)
 
   // Setup downloader
   setupDownloader()

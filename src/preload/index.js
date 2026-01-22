@@ -43,6 +43,11 @@ const api = {
   getCacheSize: () => ipcRenderer.invoke('cache:getSize'),
   openCacheFolder: () => ipcRenderer.invoke('cache:openFolder'),
 
+  // Product management
+  getAllProducts: () => ipcRenderer.invoke('products:getAll'),
+  checkProductUpdates: () => ipcRenderer.invoke('products:checkUpdates'),
+  syncProductsWithGithub: () => ipcRenderer.invoke('products:syncWithGithub'),
+
   // Remove listeners
   removeAllListeners: (channel) => ipcRenderer.removeAllListeners(channel)
 }

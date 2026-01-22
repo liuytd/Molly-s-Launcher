@@ -1,0 +1,189 @@
+{
+  "delta-act-external-chair": {
+    "Version": "1.0",
+    "OriginalFileName": "ACT_PRODUCT.exe",
+    "LastCheck": null,
+    "DownloadUrl": "https://api.cloud.anewvision.fr/280388361904979970/loader/ACT_PRODUCT.exe",
+    "ExecutablePath": "C:\\MOLLY_Multiloader\\delta-act-external-chair\\ACT_PRODUCT.exe",
+    "AssociatedExecutables": [
+      "ACT_PRODUCT.exe"
+    ],
+    "DisplayName": "Delta ACT External",
+    "Category": "External",
+    "Icon": "🎯",
+    "HttpErrorReason": null,
+    "HttpStatusCode": 0,
+    "HttpErrorTimestamp": null,
+    "NetworkErrorType": null
+  },
+  "dayz-act-external-chair": {
+    "Version": "1.0",
+    "OriginalFileName": "ACT_PRODUCT.exe",
+    "LastCheck": null,
+    "DownloadUrl": "https://api.cloud.anewvision.fr/280388361904979970/loader/ACT_PRODUCT.exe",
+    "ExecutablePath": "C:\\MOLLY_Multiloader\\dayz-act-external-chair\\ACT_PRODUCT.exe",
+    "AssociatedExecutables": [
+      "ACT_PRODUCT.exe"
+    ],
+    "DisplayName": "DayZ ACT External",
+    "Category": "External",
+    "Icon": "🎯",
+    "HttpErrorReason": null,
+    "HttpStatusCode": 0,
+    "HttpErrorTimestamp": null,
+    "NetworkErrorType": null
+  },
+  "rust-act-external-chair": {
+    "Version": "1.0",
+    "OriginalFileName": "ACT_PRODUCT.exe",
+    "LastCheck": null,
+    "DownloadUrl": "https://api.cloud.anewvision.fr/280388361904979970/loader/ACT_PRODUCT.exe",
+    "ExecutablePath": "C:\\MOLLY_Multiloader\\rust-act-external-chair\\ACT_PRODUCT.exe",
+    "AssociatedExecutables": [
+      "ACT_PRODUCT.exe"
+    ],
+    "DisplayName": "Rust ACT External",
+    "Category": "External",
+    "Icon": "🎯",
+    "HttpErrorReason": null,
+    "HttpStatusCode": 0,
+    "HttpErrorTimestamp": null,
+    "NetworkErrorType": null
+  },
+  "r6-x-zeroday-unlock-all": {
+    "Version": "1.0",
+    "OriginalFileName": "R6_UA.exe",
+    "LastCheck": null,
+    "DownloadUrl": "https://api.cloud.anewvision.fr/280388361904979970/loader/R6_UA.exe",
+    "ExecutablePath": "C:\\MOLLY_Multiloader\\r6-x-zeroday-unlock-all\\R6_UA.exe",
+    "AssociatedExecutables": [
+      "R6_UA.exe"
+    ],
+    "DisplayName": "R6 Zeroday Unlock All",
+    "Category": "Unlock All",
+    "Icon": "🔓",
+    "HttpErrorReason": null,
+    "HttpStatusCode": 0,
+    "HttpErrorTimestamp": null,
+    "NetworkErrorType": null
+  },
+  "bo6-spectre-external": {
+    "Version": "1.0",
+    "OriginalFileName": "SPECTRE.exe",
+    "LastCheck": null,
+    "DownloadUrl": "https://api.cloud.anewvision.fr/280388361904979970/loader/SPECTRE.exe",
+    "ExecutablePath": "C:\\MOLLY_Multiloader\\bo6-spectre-external\\SPECTRE.exe",
+    "AssociatedExecutables": [
+      "SPECTRE.exe"
+    ],
+    "DisplayName": "BO6 Spectre External",
+    "Category": "External",
+    "Icon": "👻",
+    "HttpErrorReason": null,
+    "HttpStatusCode": 0,
+    "HttpErrorTimestamp": null,
+    "NetworkErrorType": null
+  },
+  "mwiii-zenith-internal": {
+    "Version": "1.0",
+    "OriginalFileName": "mw3_client.exe",
+    "LastCheck": null,
+    "DownloadUrl": "https://api.cloud.anewvision.fr/280388361904979970/loader/mw3_client.exe",
+    "ExecutablePath": "C:\\MOLLY_Multiloader\\mwiii-zenith-internal\\mw3_client.exe",
+    "AssociatedExecutables": [
+      "mw3_client.exe"
+    ],
+    "DisplayName": "MWIII Zenith Internal",
+    "Category": "Internal",
+    "Icon": "⚡",
+    "HttpErrorReason": null,
+    "HttpStatusCode": 0,
+    "HttpErrorTimestamp": null,
+    "NetworkErrorType": null
+  },
+  "bo6-tren-external": {
+    "Version": "1.0",
+    "OriginalFileName": "TREN.exe",
+    "LastCheck": null,
+    "DownloadUrl": "https://api.cloud.anewvision.fr/280388361904979970/loader/TREN.exe",
+    "ExecutablePath": "C:\\MOLLY_Multiloader\\bo6-tren-external\\TREN.exe",
+    "AssociatedExecutables": [
+      "TREN.exe"
+    ],
+    "DisplayName": "BO6 Tren External",
+    "Category": "External",
+    "Icon": "💉",
+    "HttpErrorReason": null,
+    "HttpStatusCode": 0,
+    "HttpErrorTimestamp": null,
+    "NetworkErrorType": null
+  },
+  "fc26-external-chair": {
+    "Version": "1.0",
+    "OriginalFileName": "FC26.exe",
+    "LastCheck": null,
+    "DownloadUrl": "https://api.cloud.anewvision.fr/280388361904979970/loader/FC26.exe",
+    "ExecutablePath": "C:\\MOLLY_Multiloader\\fc26-external-chair\\FC26.exe",
+    "AssociatedExecutables": [
+      "FC26.exe"
+    ],
+    "DisplayName": "FC26 External",
+    "Category": "External",
+    "Icon": "⚽",
+    "HttpErrorReason": null,
+    "HttpStatusCode": 0,
+    "HttpErrorTimestamp": null,
+    "NetworkErrorType": null
+  },
+  "bo6-aim-external": {
+    "Version": "1.0",
+    "OriginalFileName": "AIMEXT.exe",
+    "LastCheck": null,
+    "DownloadUrl": "https://api.cloud.anewvision.fr/280388361904979970/loader/AIMEXT.exe",
+    "ExecutablePath": "C:\\MOLLY_Multiloader\\bo6-aim-external\\AIMEXT.exe",
+    "AssociatedExecutables": [
+      "AIMEXT.exe"
+    ],
+    "DisplayName": "BO6 Aim External",
+    "Category": "External",
+    "Icon": "🎯",
+    "HttpErrorReason": null,
+    "HttpStatusCode": 0,
+    "HttpErrorTimestamp": null,
+    "NetworkErrorType": null
+  },
+  "mw2019-dt-external-chair": {
+    "Version": "1.0",
+    "OriginalFileName": "MW2019_EXT.exe",
+    "LastCheck": null,
+    "DownloadUrl": "https://api.cloud.anewvision.fr/280388361904979970/loader/MW2019_EXT.exe",
+    "ExecutablePath": "C:\\MOLLY_Multiloader\\mw2019-dt-external-chair\\MW2019_EXT.exe",
+    "AssociatedExecutables": [
+      "MW2019_EXT.exe"
+    ],
+    "DisplayName": "MW2019 DT External",
+    "Category": "External",
+    "Icon": "🎯",
+    "HttpErrorReason": null,
+    "HttpStatusCode": 0,
+    "HttpErrorTimestamp": null,
+    "NetworkErrorType": null
+  },
+  "mw2019-dt-aio": {
+    "Version": "1.0",
+    "OriginalFileName": "MW2019_EXT.exe",
+    "LastCheck": null,
+    "DownloadUrl": "https://api.cloud.anewvision.fr/280388361904979970/loader/MW2019_EXT.exe",
+    "ExecutablePath": "C:\\MOLLY_Multiloader\\mw2019-dt-aio\\MW2019_EXT.exe",
+    "AssociatedExecutables": [
+      "MW2019_EXT.exe"
+    ],
+    "DisplayName": "MW2019 DT AIO",
+    "Category": "AIO",
+    "Icon": "🎮",
+    "HttpErrorReason": null,
+    "HttpStatusCode": 0,
+    "HttpErrorTimestamp": null,
+    "NetworkErrorType": null
+  }
+}

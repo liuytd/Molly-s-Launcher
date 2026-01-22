@@ -3,67 +3,15 @@ import { useNavigate } from 'react-router-dom'
 import { Star, Package, HardDrive } from 'lucide-react'
 import ProductCard from '../components/ProductCard'
 
-// Sample products data - This will be loaded from Discord commands later
-const sampleProducts = [
-  {
-    id: 'valorant',
-    name: 'Valorant',
-    icon: '🎯',
-    color: '#ff4655',
-    description: 'Valorant products',
-    exeCount: 3
-  },
-  {
-    id: 'fortnite',
-    name: 'Fortnite',
-    icon: '🎮',
-    color: '#9d4dff',
-    description: 'Fortnite products',
-    exeCount: 2
-  },
-  {
-    id: 'warzone',
-    name: 'Warzone',
-    icon: '🔫',
-    color: '#00ff00',
-    description: 'Warzone products',
-    exeCount: 4
-  },
-  {
-    id: 'apex',
-    name: 'Apex Legends',
-    icon: '🦅',
-    color: '#ff0000',
-    description: 'Apex products',
-    exeCount: 2
-  },
-  {
-    id: 'rust',
-    name: 'Rust',
-    icon: '🔧',
-    color: '#cd412b',
-    description: 'Rust products',
-    exeCount: 3
-  },
-  {
-    id: 'utilities',
-    name: 'Utilities',
-    icon: '⚙️',
-    color: '#06b6d4',
-    description: 'Utility tools',
-    exeCount: 5
-  }
-]
-
 export default function Home() {
   const navigate = useNavigate()
-  const [products, setProducts] = useState(sampleProducts)
+  const [products, setProducts] = useState([])
   const [favorites, setFavorites] = useState([])
   const [cacheSize, setCacheSize] = useState('0 B')
   const [filter, setFilter] = useState('all') // 'all' or 'favorites'
 
   useEffect(() => {
-    // Load favorites
+    // Load favorites and products
     if (window.api) {
       window.api.getFavorites().then(setFavorites)
       window.api.getCacheSize().then(result => {
@@ -71,9 +19,27 @@ export default function Home() {
           setCacheSize(result.sizeFormatted)
         }
       })
-    }
 
-    // TODO: Load products from store (populated by Discord commands)
+      // Load products from loader_versions.json
+      window.api.getAllProducts().then(result => {
+        if (result.success) {
+          // Transform products to match UI format
+          const transformedProducts = result.products.map(product => ({
+            id: product.id,
+            name: product.name,
+            icon: product.icon,
+            description: product.category,
+            exeCount: product.executables.length,
+            isDownloaded: product.isDownloaded,
+            version: product.version
+          }))
+          setProducts(transformedProducts)
+        }
+      })
+
+      // Sync products with GitHub on load
+      window.api.syncProductsWithGithub()
+    }
   }, [])
 
   const handleProductClick = (productId) => {

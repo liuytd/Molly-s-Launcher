@@ -5,7 +5,7 @@ import { get as httpsGet } from 'https'
 import { exec } from 'child_process'
 import log from 'electron-log'
 
-const VERSION_URL = 'https://raw.githubusercontent.com/liuytd/Molly-s-Launcher/main/version.json'
+const VERSION_URL = 'https://raw.githubusercontent.com/liuytd/Molly-s-Launcher/main/version.ml.json'
 let mainWindow = null
 let updateCheckInterval = null
 

@@ -1,33 +1,34 @@
-import { ipcMain, app, shell } from 'electron'
+import { ipcMain, shell } from 'electron'
 import { join } from 'path'
-import { createWriteStream, existsSync, mkdirSync, unlinkSync, statSync } from 'fs'
+import { createWriteStream, existsSync, mkdirSync, unlinkSync, statSync, readFileSync, writeFileSync, readdirSync } from 'fs'
 import { get } from 'https'
 import { get as httpGet } from 'http'
 import log from 'electron-log'
-import Store from 'electron-store'
 import { spawn } from 'child_process'
 
-const store = new Store({ name: 'mollys-launcher-data' })
-
-// Cache directory
-const getCacheDir = () => {
-  const cacheDir = join(app.getPath('userData'), 'cache')
-  if (!existsSync(cacheDir)) {
-    mkdirSync(cacheDir, { recursive: true })
-  }
-  return cacheDir
-}
+const MOLLY_FOLDER = 'C:\\MOLLY_Multiloader'
+const LOCAL_LOADER_VERSIONS = join(MOLLY_FOLDER, 'loader_versions.json')
 
 export function setupDownloader() {
+  // Ensure C:\MOLLY_Multiloader exists
+  if (!existsSync(MOLLY_FOLDER)) {
+    mkdirSync(MOLLY_FOLDER, { recursive: true })
+  }
+
   // Download an EXE file
   ipcMain.handle('download:exe', async (_, { url, filename, productId }) => {
     try {
-      const cacheDir = getCacheDir()
-      const filePath = join(cacheDir, filename)
+      // Create product folder
+      const productFolder = join(MOLLY_FOLDER, productId)
+      if (!existsSync(productFolder)) {
+        mkdirSync(productFolder, { recursive: true })
+      }
 
-      // Check if file already exists in cache
+      const filePath = join(productFolder, filename)
+
+      // Check if file already exists
       if (existsSync(filePath)) {
-        log.info(`File ${filename} already in cache`)
+        log.info(`File ${filename} already exists at ${filePath}`)
         return {
           success: true,
           path: filePath,
@@ -42,15 +43,8 @@ export function setupDownloader() {
         // Send progress to renderer if needed
       })
 
-      // Update cache metadata
-      const cacheData = store.get('cacheMetadata', {})
-      cacheData[productId] = {
-        filename,
-        path: filePath,
-        downloadedAt: Date.now(),
-        url
-      }
-      store.set('cacheMetadata', cacheData)
+      // Update loader_versions.json with LastCheck timestamp
+      updateProductLastCheck(productId)
 
       return {
         success: true,
@@ -66,10 +60,10 @@ export function setupDownloader() {
     }
   })
 
-  // Check if EXE is cached
+  // Check if EXE is downloaded
   ipcMain.handle('download:checkCache', async (_, { productId, filename }) => {
-    const cacheDir = getCacheDir()
-    const filePath = join(cacheDir, filename)
+    const productFolder = join(MOLLY_FOLDER, productId)
+    const filePath = join(productFolder, filename)
     const exists = existsSync(filePath)
 
     if (exists) {
@@ -114,22 +108,29 @@ export function setupDownloader() {
     }
   })
 
-  // Clear cache
+  // Clear all cached files
   ipcMain.handle('cache:clear', async () => {
     try {
-      const cacheDir = getCacheDir()
-      const cacheData = store.get('cacheMetadata', {})
+      if (!existsSync(LOCAL_LOADER_VERSIONS)) {
+        return { success: true, message: 'No cache to clear' }
+      }
 
-      for (const productId in cacheData) {
-        const { path } = cacheData[productId]
-        if (existsSync(path)) {
-          unlinkSync(path)
+      const loaderVersions = JSON.parse(readFileSync(LOCAL_LOADER_VERSIONS, 'utf-8'))
+
+      for (const [productId, product] of Object.entries(loaderVersions)) {
+        const productFolder = join(MOLLY_FOLDER, productId)
+        if (existsSync(productFolder)) {
+          const files = readdirSync(productFolder)
+          for (const file of files) {
+            const filePath = join(productFolder, file)
+            if (existsSync(filePath)) {
+              unlinkSync(filePath)
+            }
+          }
         }
       }
 
-      store.set('cacheMetadata', {})
-
-      return { success: true }
+      return { success: true, message: 'Cache cleared' }
     } catch (error) {
       log.error('Clear cache error:', error)
       return {
@@ -142,14 +143,17 @@ export function setupDownloader() {
   // Get cache size
   ipcMain.handle('cache:getSize', async () => {
     try {
-      const cacheData = store.get('cacheMetadata', {})
       let totalSize = 0
 
-      for (const productId in cacheData) {
-        const { path } = cacheData[productId]
-        if (existsSync(path)) {
-          const stats = statSync(path)
-          totalSize += stats.size
+      if (existsSync(LOCAL_LOADER_VERSIONS)) {
+        const loaderVersions = JSON.parse(readFileSync(LOCAL_LOADER_VERSIONS, 'utf-8'))
+
+        for (const [productId, product] of Object.entries(loaderVersions)) {
+          const filePath = product.ExecutablePath
+          if (existsSync(filePath)) {
+            const stats = statSync(filePath)
+            totalSize += stats.size
+          }
         }
       }
 
@@ -166,10 +170,26 @@ export function setupDownloader() {
     }
   })
 
-  // Open cache folder
+  // Open MOLLY_Multiloader folder
   ipcMain.handle('cache:openFolder', () => {
-    shell.openPath(getCacheDir())
+    shell.openPath(MOLLY_FOLDER)
   })
+}
+
+// Update LastCheck timestamp in loader_versions.json
+function updateProductLastCheck(productId) {
+  try {
+    if (!existsSync(LOCAL_LOADER_VERSIONS)) return
+
+    const loaderVersions = JSON.parse(readFileSync(LOCAL_LOADER_VERSIONS, 'utf-8'))
+
+    if (loaderVersions[productId]) {
+      loaderVersions[productId].LastCheck = new Date().toISOString()
+      writeFileSync(LOCAL_LOADER_VERSIONS, JSON.stringify(loaderVersions, null, 2))
+    }
+  } catch (error) {
+    log.error('Error updating LastCheck:', error)
+  }
 }
 
 // Download file helper
@@ -215,7 +235,9 @@ function downloadFile(url, destPath, onProgress) {
       })
 
       file.on('error', (err) => {
-        unlinkSync(destPath)
+        if (existsSync(destPath)) {
+          unlinkSync(destPath)
+        }
         reject(err)
       })
     })
