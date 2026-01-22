@@ -22,7 +22,8 @@
       "Bash(where:*)",
       "Bash(python create-release.py:*)",
       "Bash(node release.js:*)",
-      "Bash(npm run release:*)"
+      "Bash(npm run release:*)",
+      "Bash(if not exist \"resources\\\\game-logos\" mkdir resourcesgame-logos)"
     ]
   }
 }

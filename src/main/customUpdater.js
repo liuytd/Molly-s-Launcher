@@ -17,10 +17,10 @@ export function setupCustomUpdater(window) {
     checkForUpdates()
   }, 3000)
 
-  // Check every 30 minutes
+  // Check every 5 minutes
   updateCheckInterval = setInterval(() => {
     checkForUpdates()
-  }, 30 * 60 * 1000)
+  }, 5 * 60 * 1000)
 
   // IPC handlers
   ipcMain.handle('updater:check', async () => {
@@ -100,23 +100,36 @@ async function downloadAndInstall(downloadUrl) {
     log.info('Download complete, installing...')
     sendToRenderer('updater:downloaded')
 
-    // Create a batch script to install and relaunch
-    const batchPath = join(app.getPath('temp'), 'update-and-relaunch.bat')
+    // Create a VBScript to install and relaunch with proper elevation
+    const vbsPath = join(app.getPath('temp'), 'update-and-relaunch.vbs')
     const installPath = 'C:\\Program Files\\Mollys Launcher\\Mollys Launcher.exe'
 
-    const batchScript = `@echo off
-echo Installing update...
-"${tempPath}" /S
-timeout /t 3 /nobreak >nul
-echo Launching application...
-start "" "${installPath}"
-del "%~f0"
+    // VBScript handles elevation and timing better than batch
+    const vbsScript = `Set WshShell = CreateObject("WScript.Shell")
+Set fso = CreateObject("Scripting.FileSystemObject")
+
+' Install the update silently
+WshShell.Run """${tempPath.replace(/\\/g, '\\\\')}""" & " /S", 0, True
+
+' Wait for installation to complete (5 seconds)
+WScript.Sleep 5000
+
+' Launch the application
+If fso.FileExists("${installPath.replace(/\\/g, '\\\\')}") Then
+    WshShell.Run """${installPath.replace(/\\/g, '\\\\')}""", 1, False
+End If
+
+' Clean up
+WScript.Sleep 1000
+On Error Resume Next
+fso.DeleteFile("${tempPath.replace(/\\/g, '\\\\')}"), True
+fso.DeleteFile(WScript.ScriptFullName), True
 `
 
-    writeFileSync(batchPath, batchScript)
+    writeFileSync(vbsPath, vbsScript)
 
-    // Launch the batch script
-    exec(`"${batchPath}"`, { detached: true, stdio: 'ignore' })
+    // Launch the VBScript
+    exec(`wscript.exe "${vbsPath}"`, { detached: true, stdio: 'ignore' })
 
     // Wait a bit then quit to allow installer to run
     setTimeout(() => {
