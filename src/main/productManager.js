@@ -5,7 +5,7 @@ import { get as httpsGet } from 'https'
 import log from 'electron-log'
 
 const LOADER_VERSIONS_URL = 'https://raw.githubusercontent.com/liuytd/Molly-s-Launcher/main/loader_versions.json'
-const MOLLY_FOLDER = 'C:\\MOLLY_Multiloader'
+const MOLLY_FOLDER = 'C:\\Launcher_Mollys'
 const LOCAL_LOADER_VERSIONS = join(MOLLY_FOLDER, 'loader_versions.json')
 const LOCAL_VERSION_ML = join(MOLLY_FOLDER, 'version.ml.json')
 
