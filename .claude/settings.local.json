@@ -17,7 +17,9 @@
       "Bash(git push:*)",
       "Bash(gh release create:*)",
       "Bash(ls:*)",
-      "Bash(git branch:*)"
+      "Bash(git branch:*)",
+      "Bash(npm run build:production:*)",
+      "Bash(where:*)"
     ]
   }
 }

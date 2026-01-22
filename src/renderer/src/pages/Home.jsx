@@ -88,7 +88,7 @@ export default function Home() {
       </div>
 
       {/* Products grid */}
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto overflow-x-hidden">
         {filteredProducts.length === 0 ? (
           <div className="h-full flex flex-col items-center justify-center text-center">
             <Star size={48} className="text-[var(--color-text-muted)] mb-4" />
@@ -100,7 +100,7 @@ export default function Home() {
             </p>
           </div>
         ) : (
-          <div className="space-y-2">
+          <div className="space-y-2 pr-1">
             {filteredProducts.map((product, index) => (
               <ProductCard
                 key={product.id}

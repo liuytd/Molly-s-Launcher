@@ -1,9 +1,9 @@
 {
-  "version": "1.0.7",
-  "downloadUrl": "https://github.com/liuytd/Molly-s-Launcher/releases/download/v1.0.7/MollysLauncher-setup.exe",
+  "version": "1.0.8",
+  "downloadUrl": "https://github.com/liuytd/Molly-s-Launcher/releases/download/v1.0.8/MollysLauncher-setup.exe",
   "changelog": [
-    "Auto-sync version.ml.json from GitHub",
-    "Both JSON files now download automatically",
-    "Fixed product synchronization on startup"
+    "Centered title in titlebar",
+    "Fixed favorite star overflow issue",
+    "Adjusted product card width to 80%"
   ]
 }
