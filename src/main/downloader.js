@@ -6,7 +6,7 @@ import { get as httpGet } from 'http'
 import log from 'electron-log'
 import { spawn } from 'child_process'
 
-const MOLLY_FOLDER = 'C:\\MOLLY_Multiloader'
+const MOLLY_FOLDER = 'C:\\Launcher_Mollys'
 const LOCAL_LOADER_VERSIONS = join(MOLLY_FOLDER, 'loader_versions.json')
 
 export function setupDownloader() {
