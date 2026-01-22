@@ -100,7 +100,7 @@ export default function Home() {
             </p>
           </div>
         ) : (
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-center gap-6">
             {filteredProducts.map((product, index) => (
               <ProductCard
                 key={product.id}
