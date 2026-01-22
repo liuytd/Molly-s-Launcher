@@ -1,10 +1,10 @@
 {
-  "version": "1.1.7",
-  "downloadUrl": "https://github.com/liuytd/Molly-s-Launcher/releases/download/v1.1.7/MollysLauncher-setup.exe",
+  "version": "1.1.8",
+  "downloadUrl": "https://github.com/liuytd/Molly-s-Launcher/releases/download/v1.1.8/MollysLauncher-setup.exe",
   "changelog": [
-    "Use GitHub API instead of raw CDN",
-    "Instant update detection - no more cache delays",
-    "Fixed 40min update detection delay"
+    "Increased card spacing to mb-6 (24px)",
+    "Better visual separation between game cards",
+    "Improved readability"
   ]
 }
 
