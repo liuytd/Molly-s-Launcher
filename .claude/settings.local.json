@@ -19,7 +19,9 @@
       "Bash(ls:*)",
       "Bash(git branch:*)",
       "Bash(npm run build:production:*)",
-      "Bash(where:*)"
+      "Bash(where:*)",
+      "Bash(python create-release.py:*)",
+      "Bash(node release.js:*)"
     ]
   }
 }

@@ -1,9 +1,11 @@
 {
-  "version": "1.0.8",
-  "downloadUrl": "https://github.com/liuytd/Molly-s-Launcher/releases/download/v1.0.8/MollysLauncher-setup.exe",
+  "version": "1.0.9",
+  "downloadUrl": "https://github.com/liuytd/Molly-s-Launcher/releases/download/v1.0.9/MollysLauncher-setup.exe",
   "changelog": [
-    "Centered title in titlebar",
-    "Fixed favorite star overflow issue",
-    "Adjusted product card width to 80%"
+    "Hidden scrollbar (scroll still functional)",
+    "Centered game cards",
+    "Centered game card names",
+    "Auto-relaunch after update",
+    "Always run as administrator"
   ]
 }

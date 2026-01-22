@@ -20,7 +20,7 @@ export default function ProductCard({ product, isFavorite, onToggleFavorite, onC
       </div>
 
       {/* Content */}
-      <div className="flex-1 min-w-0">
+      <div className="flex-1 min-w-0 text-center">
         <h3 className="text-sm font-medium text-[var(--color-text)] truncate">
           {product.name}
         </h3>

@@ -100,14 +100,17 @@ async function downloadAndInstall(downloadUrl) {
     log.info('Download complete, installing...')
     sendToRenderer('updater:downloaded')
 
-    // Launch installer and quit
-    exec(`"${tempPath}" /S`, (error) => {
+    // Get app path to relaunch after install
+    const appPath = process.execPath
+
+    // Launch installer with auto-restart flag
+    exec(`"${tempPath}" /S /LAUNCH="${appPath}"`, (error) => {
       if (error) {
         log.error('Install error:', error)
       }
     })
 
-    // Wait a bit then quit
+    // Wait a bit then quit to allow installer to run
     setTimeout(() => {
       app.quit()
     }, 500)

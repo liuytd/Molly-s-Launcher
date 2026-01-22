@@ -8,3 +8,5 @@ Thumbs.db
 .env.local
 *.pem
 nul
+.github-token
+create-release.py

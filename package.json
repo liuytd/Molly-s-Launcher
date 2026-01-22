@@ -1,6 +1,6 @@
 {
   "name": "mollys-launcher",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Mollys Launcher - MultiLoader for Mollys products",
   "main": "./out/main/index.js",
   "author": "liuytd",
@@ -14,6 +14,7 @@
     "build": "electron-vite build",
     "build:win": "npm run build && electron-builder --win --config",
     "build:production": "npm run build && electron-builder --win --config",
+    "release": "npm run build:production && node release.js",
     "preview": "electron-vite preview",
     "lint": "eslint . --ext .js,.jsx",
     "format": "prettier --write ."
