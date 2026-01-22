@@ -1,6 +1,6 @@
 import { app, ipcMain } from 'electron'
 import { join } from 'path'
-import { createWriteStream, existsSync, unlinkSync } from 'fs'
+import { createWriteStream, existsSync, unlinkSync, writeFileSync } from 'fs'
 import { get as httpsGet } from 'https'
 import { exec } from 'child_process'
 import log from 'electron-log'
@@ -100,15 +100,23 @@ async function downloadAndInstall(downloadUrl) {
     log.info('Download complete, installing...')
     sendToRenderer('updater:downloaded')
 
-    // Get app path to relaunch after install
-    const appPath = process.execPath
+    // Create a batch script to install and relaunch
+    const batchPath = join(app.getPath('temp'), 'update-and-relaunch.bat')
+    const installPath = 'C:\\Program Files\\Mollys Launcher\\Mollys Launcher.exe'
 
-    // Launch installer with auto-restart flag
-    exec(`"${tempPath}" /S /LAUNCH="${appPath}"`, (error) => {
-      if (error) {
-        log.error('Install error:', error)
-      }
-    })
+    const batchScript = `@echo off
+echo Installing update...
+"${tempPath}" /S
+timeout /t 3 /nobreak >nul
+echo Launching application...
+start "" "${installPath}"
+del "%~f0"
+`
+
+    writeFileSync(batchPath, batchScript)
+
+    // Launch the batch script
+    exec(`"${batchPath}"`, { detached: true, stdio: 'ignore' })
 
     // Wait a bit then quit to allow installer to run
     setTimeout(() => {
