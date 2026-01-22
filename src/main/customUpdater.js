@@ -40,7 +40,9 @@ async function checkForUpdates() {
   try {
     log.info('Checking for updates from GitHub...')
 
-    const versionData = await fetchJSON(VERSION_URL)
+    // Add timestamp to bypass GitHub cache
+    const cacheBustUrl = `${VERSION_URL}?t=${Date.now()}`
+    const versionData = await fetchJSON(cacheBustUrl)
     const currentVersion = app.getVersion()
     const latestVersion = versionData.version
 
@@ -198,7 +200,23 @@ function downloadFile(url, destPath, onProgress) {
 
 function fetchJSON(url) {
   return new Promise((resolve, reject) => {
-    httpsGet(url, (response) => {
+    const options = {
+      headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+      }
+    }
+
+    httpsGet(url, options, (response) => {
+      // Handle redirects
+      if (response.statusCode === 301 || response.statusCode === 302) {
+        fetchJSON(response.headers.location)
+          .then(resolve)
+          .catch(reject)
+        return
+      }
+
       let data = ''
 
       response.on('data', (chunk) => {
