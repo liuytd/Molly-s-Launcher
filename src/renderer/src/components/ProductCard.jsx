@@ -4,7 +4,7 @@ export default function ProductCard({ product, isFavorite, onToggleFavorite, onC
   return (
     <div
       onClick={onClick}
-      className="glass rounded-xl p-3 cursor-pointer transition-all duration-200 hover:translate-x-1 hover:glow-purple animate-fade-in group relative flex items-center gap-4 max-w-[80%]"
+      className="glass rounded-xl p-3 cursor-pointer transition-all duration-200 hover:translate-x-1 hover:glow-purple animate-fade-in group relative flex items-center gap-4 w-[80%]"
       style={style}
     >
       {/* Icon */}

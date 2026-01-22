@@ -21,7 +21,8 @@
       "Bash(npm run build:production:*)",
       "Bash(where:*)",
       "Bash(python create-release.py:*)",
-      "Bash(node release.js:*)"
+      "Bash(node release.js:*)",
+      "Bash(npm run release:*)"
     ]
   }
 }
