@@ -15,8 +15,8 @@ function getAutoUpdater() {
     autoUpdater.logger = log
     autoUpdater.logger.transports.file.level = 'info'
 
-    // Disable auto download - we want to show popup first
-    autoUpdater.autoDownload = false
+    // Enable auto download and install
+    autoUpdater.autoDownload = true
     autoUpdater.autoInstallOnAppQuit = true
   }
   return autoUpdater

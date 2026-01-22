@@ -60,24 +60,32 @@ export default function App() {
       await new Promise(r => setTimeout(r, 1000))
 
       setLoadingText('CHECKING FOR UPDATES...')
-      await new Promise(r => setTimeout(r, 800))
 
-      // Check for actual updates (only show popup if update is actually available and downloadable)
+      // Check for actual updates
+      let updateFound = false
       if (window.api) {
         try {
           const result = await window.api.checkForUpdates()
-          // Only show popup if success is true and update is available (not in dev mode)
+          // Only show update UI if success is true and update is available (not in dev mode)
           if (result.success && result.updateAvailable) {
+            updateFound = true
             setUpdateInfo(result)
             setShowUpdatePopup(true)
+            setLoadingText('NEW VERSION FOUND!')
+            await new Promise(r => setTimeout(r, 1000))
+            setLoadingText('INSTALLATION IN PROGRESS...')
+            // The app will restart automatically when download completes
+            return // Don't continue loading, wait for restart
           }
         } catch (err) {
           console.log('Update check failed:', err)
         }
       }
 
-      setLoadingText('LOADING PRODUCTS...')
-      await new Promise(r => setTimeout(r, 600))
+      if (!updateFound) {
+        setLoadingText('LOADING PRODUCTS...')
+        await new Promise(r => setTimeout(r, 600))
+      }
 
       setLoadingText('READY')
       await new Promise(r => setTimeout(r, 400))

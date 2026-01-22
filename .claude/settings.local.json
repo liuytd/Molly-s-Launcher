@@ -11,7 +11,10 @@
       "Bash(git commit:*)",
       "Bash(git config user.email \"liuytd@users.noreply.github.com\")",
       "Bash(git config:*)",
-      "Bash(npm run build:win:*)"
+      "Bash(npm run build:win:*)",
+      "Bash(git remote set-url:*)",
+      "Bash(curl:*)",
+      "Bash(git push:*)"
     ]
   }
 }
