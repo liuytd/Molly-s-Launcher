@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Star, MessageCircle, Globe, Key } from 'lucide-react'
+import { Star, MessageCircle, Globe, Key, LayoutGrid } from 'lucide-react'
 import ProductCard from '../components/ProductCard'
 
 export default function Home() {
@@ -62,9 +62,22 @@ export default function Home() {
     <div className="h-full flex overflow-hidden">
       {/* Left Sidebar */}
       <div className="w-16 flex flex-col items-center justify-center gap-4 py-4 border-r border-[var(--color-border)]">
+        {/* All Products */}
+        <button
+          onClick={() => setFilter('all')}
+          className={`p-3 rounded-lg transition-all ${
+            filter === 'all'
+              ? 'bg-[var(--color-primary)]/20 text-[var(--color-primary)]'
+              : 'text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:bg-[var(--color-primary)]/10'
+          }`}
+          title="All Products"
+        >
+          <LayoutGrid size={20} />
+        </button>
+
         {/* Favorites */}
         <button
-          onClick={() => setFilter(filter === 'favorites' ? 'all' : 'favorites')}
+          onClick={() => setFilter('favorites')}
           className={`p-3 rounded-lg transition-all ${
             filter === 'favorites'
               ? 'bg-[var(--color-primary)]/20 text-[var(--color-primary)]'

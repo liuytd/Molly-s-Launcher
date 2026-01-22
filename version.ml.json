@@ -1,9 +1,9 @@
 {
-  "version": "1.2.2",
-  "downloadUrl": "https://github.com/liuytd/Molly-s-Launcher/releases/download/v1.2.2/MollysLauncher-setup.exe",
+  "version": "1.2.3",
+  "downloadUrl": "https://github.com/liuytd/Molly-s-Launcher/releases/download/v1.2.3/MollysLauncher-setup.exe",
   "changelog": [
-    "Vertically centered sidebar icons",
-    "Improved sidebar layout"
+    "Added 'All Products' button above Favorites",
+    "Better navigation between all products and favorites"
   ]
 }
 
