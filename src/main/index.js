@@ -2,7 +2,7 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import Store from 'electron-store'
 import log from 'electron-log'
-import { setupUpdater } from './updater.js'
+import { setupCustomUpdater } from './customUpdater.js'
 import { setupDownloader } from './downloader.js'
 
 // Check if in development mode (will be set after app is ready)
@@ -135,8 +135,8 @@ app.whenReady().then(() => {
 
   createWindow()
 
-  // Setup updater
-  setupUpdater(mainWindow)
+  // Setup custom updater
+  setupCustomUpdater(mainWindow)
 
   // Setup downloader
   setupDownloader()

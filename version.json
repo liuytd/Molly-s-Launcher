@@ -1,0 +1,9 @@
+{
+  "version": "1.0.3",
+  "downloadUrl": "https://github.com/liuytd/Molly-s-Launcher/releases/download/v1.0.3/MollysLauncher-setup.exe",
+  "changelog": [
+    "Custom update system with version.json",
+    "Automatic download and installation",
+    "Better progress tracking"
+  ]
+}

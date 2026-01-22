@@ -22,16 +22,15 @@ const api = {
 
   // Updater
   checkForUpdates: () => ipcRenderer.invoke('updater:check'),
-  downloadUpdate: () => ipcRenderer.invoke('updater:download'),
-  installUpdate: () => ipcRenderer.invoke('updater:install'),
+  installUpdate: (downloadUrl) => ipcRenderer.invoke('updater:install', downloadUrl),
   getUpdaterVersion: () => ipcRenderer.invoke('updater:getVersion'),
 
   // Updater events
-  onUpdateChecking: (callback) => ipcRenderer.on('updater:checking', callback),
   onUpdateAvailable: (callback) => ipcRenderer.on('updater:available', (_, data) => callback(data)),
   onUpdateNotAvailable: (callback) => ipcRenderer.on('updater:not-available', callback),
   onUpdateProgress: (callback) => ipcRenderer.on('updater:progress', (_, data) => callback(data)),
   onUpdateDownloaded: (callback) => ipcRenderer.on('updater:downloaded', (_, data) => callback(data)),
+  onUpdateDownloading: (callback) => ipcRenderer.on('updater:downloading', callback),
   onUpdateError: (callback) => ipcRenderer.on('updater:error', (_, data) => callback(data)),
 
   // Downloader

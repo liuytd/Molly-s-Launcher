@@ -98,11 +98,22 @@ export default function App() {
     // Listen for update events
     if (window.api) {
       window.api.onUpdateAvailable((data) => {
-        setUpdateInfo(data)
-        setShowUpdatePopup(true)
+        // Auto install update
+        setIsLoading(true)
+        setLoadingText('NEW VERSION FOUND!')
+        setTimeout(() => {
+          setLoadingText('DOWNLOADING UPDATE...')
+          window.api.installUpdate(data.downloadUrl)
+        }, 1000)
       })
 
-      window.api.onUpdateDownloaded((data) => {
+      window.api.onUpdateProgress((data) => {
+        setIsLoading(true)
+        setLoadingText(`DOWNLOADING... ${Math.round(data.percent)}%`)
+      })
+
+      window.api.onUpdateDownloaded(() => {
+        setIsLoading(true)
         setLoadingText('INSTALLING UPDATE...')
       })
     }
@@ -111,6 +122,7 @@ export default function App() {
       if (window.api) {
         window.api.removeAllListeners('updater:available')
         window.api.removeAllListeners('updater:downloaded')
+        window.api.removeAllListeners('updater:progress')
       }
     }
   }, [])
