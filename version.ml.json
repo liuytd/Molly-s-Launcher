@@ -1,11 +1,8 @@
 {
-  "version": "1.3.7",
-  "downloadUrl": "https://github.com/liuytd/Molly-s-Launcher/releases/download/v1.3.7/MollysLauncher-setup.exe",
+  "version": "1.3.8",
+  "downloadUrl": "https://github.com/liuytd/Molly-s-Launcher/releases/download/v1.3.8/MollysLauncher-setup.exe",
   "changelog": [
-    "Fixed update loop bug with skip version system",
-    "Loader cards 80% width and centered",
-    "Fixed favorites filter (shows categories with favorite loaders)",
-    "Launch button now finds most recent exe in folder",
-    "Skip placeholder folders creation"
+    "Fixed version.ml.json sync using GitHub API (no more CDN caching issues)",
+    "Auto-updates now detect new versions immediately"
   ]
 }

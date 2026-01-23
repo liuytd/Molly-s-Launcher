@@ -7,7 +7,7 @@ import log from 'electron-log'
 
 // Use GitHub API to avoid CDN caching issues
 const LOADER_VERSIONS_API_URL = 'https://api.github.com/repos/liuytd/Molly-s-Launcher/contents/loader_versions.json'
-const VERSION_ML_URL = 'https://raw.githubusercontent.com/liuytd/Molly-s-Launcher/main/version.ml.json'
+const VERSION_ML_API_URL = 'https://api.github.com/repos/liuytd/Molly-s-Launcher/contents/version.ml.json'
 const MOLLY_FOLDER = 'C:\\Launcher_Mollys'
 const LOCAL_LOADER_VERSIONS = join(MOLLY_FOLDER, 'loader_versions.json')
 const LOCAL_VERSION_ML = join(MOLLY_FOLDER, 'version.ml.json')
@@ -390,9 +390,9 @@ async function syncProductsWithGithub() {
     writeFileSync(LOCAL_LOADER_VERSIONS, JSON.stringify(remoteData, null, 2))
     log.info('Products synced successfully')
 
-    // Fetch and save version.ml.json
+    // Fetch and save version.ml.json using GitHub API (avoids CDN caching)
     try {
-      const versionData = await fetchJSON(VERSION_ML_URL)
+      const versionData = await fetchVersionMlFromAPI()
       writeFileSync(LOCAL_VERSION_ML, JSON.stringify(versionData, null, 2))
       log.info('version.ml.json synced successfully')
     } catch (error) {
@@ -455,6 +455,45 @@ async function fetchLoaderVersionsFromAPI() {
           const content = Buffer.from(apiResponse.content, 'base64').toString('utf-8')
           const loaderVersions = JSON.parse(content)
           resolve(loaderVersions)
+        } catch (error) {
+          reject(error)
+        }
+      })
+    }).on('error', reject)
+  })
+}
+
+async function fetchVersionMlFromAPI() {
+  return new Promise((resolve, reject) => {
+    const url = `${VERSION_ML_API_URL}?ref=main&t=${Date.now()}`
+
+    const options = {
+      headers: {
+        'User-Agent': 'MollysLauncher',
+        'Accept': 'application/vnd.github.v3+json',
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache'
+      }
+    }
+
+    httpsGet(url, options, (response) => {
+      if (response.statusCode !== 200) {
+        reject(new Error(`GitHub API failed for version.ml.json: ${response.statusCode}`))
+        return
+      }
+
+      let data = ''
+      response.on('data', (chunk) => {
+        data += chunk
+      })
+
+      response.on('end', () => {
+        try {
+          const apiResponse = JSON.parse(data)
+          // Decode base64 content from GitHub API
+          const content = Buffer.from(apiResponse.content, 'base64').toString('utf-8')
+          const versionData = JSON.parse(content)
+          resolve(versionData)
         } catch (error) {
           reject(error)
         }
