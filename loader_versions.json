@@ -33,23 +33,6 @@
     "HttpErrorTimestamp": null,
     "NetworkErrorType": null
   },
-  "fc26-external-chair": {
-    "Version": "1.0",
-    "OriginalFileName": "FC26.exe",
-    "LastCheck": null,
-    "DownloadUrl": "https://api.cloud.anewvision.fr/280388361904979970/loader/FC26.exe",
-    "ExecutablePath": "C:\\Launcher_Mollys\\fc26-external-chair\\FC26.exe",
-    "AssociatedExecutables": [
-      "FC26.exe"
-    ],
-    "DisplayName": "FC26 External",
-    "Category": "FC 26",
-    "Icon": "⚽",
-    "HttpErrorReason": null,
-    "HttpStatusCode": 0,
-    "HttpErrorTimestamp": null,
-    "NetworkErrorType": null
-  },
   "mw2019-dt-external-chair": {
     "Version": "1.0",
     "OriginalFileName": "MW2019_EXT.exe",
