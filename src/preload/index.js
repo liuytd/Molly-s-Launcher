@@ -47,6 +47,15 @@ const api = {
   getAllProducts: () => ipcRenderer.invoke('products:getAll'),
   checkProductUpdates: () => ipcRenderer.invoke('products:checkUpdates'),
   syncProductsWithGithub: () => ipcRenderer.invoke('products:syncWithGithub'),
+  downloadLoader: (productId) => ipcRenderer.invoke('products:downloadLoader', productId),
+
+  // Loader update events
+  onLoaderUpdatesAvailable: (callback) => ipcRenderer.on('loader:updates-available', (_, data) => callback(data)),
+  onLoaderDownloadStarted: (callback) => ipcRenderer.on('loader:download-started', (_, data) => callback(data)),
+  onLoaderDownloadProgress: (callback) => ipcRenderer.on('loader:download-progress', (_, data) => callback(data)),
+  onLoaderDownloadComplete: (callback) => ipcRenderer.on('loader:download-complete', (_, data) => callback(data)),
+  onLoaderDownloadError: (callback) => ipcRenderer.on('loader:download-error', (_, data) => callback(data)),
+  onLoaderProductsSynced: (callback) => ipcRenderer.on('loader:products-synced', (_, data) => callback(data)),
 
   // Remove listeners
   removeAllListeners: (channel) => ipcRenderer.removeAllListeners(channel)

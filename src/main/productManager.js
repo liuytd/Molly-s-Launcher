@@ -1,24 +1,30 @@
 import { ipcMain } from 'electron'
-import { join } from 'path'
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs'
-import { get as httpsGet } from 'https'
+import { join, dirname } from 'path'
+import { existsSync, mkdirSync, readFileSync, writeFileSync, createWriteStream, unlinkSync } from 'fs'
+import { get as httpsGet, request as httpsRequest } from 'https'
+import { get as httpGet } from 'http'
 import log from 'electron-log'
 
-const LOADER_VERSIONS_URL = 'https://raw.githubusercontent.com/liuytd/Molly-s-Launcher/main/loader_versions.json'
+// Use GitHub API to avoid CDN caching issues
+const LOADER_VERSIONS_API_URL = 'https://api.github.com/repos/liuytd/Molly-s-Launcher/contents/loader_versions.json'
 const VERSION_ML_URL = 'https://raw.githubusercontent.com/liuytd/Molly-s-Launcher/main/version.ml.json'
 const MOLLY_FOLDER = 'C:\\Launcher_Mollys'
 const LOCAL_LOADER_VERSIONS = join(MOLLY_FOLDER, 'loader_versions.json')
 const LOCAL_VERSION_ML = join(MOLLY_FOLDER, 'version.ml.json')
 
+// Check interval: 5 minutes
+const CHECK_INTERVAL = 5 * 60 * 1000
+
 let mainWindow = null
+let checkInterval = null
 
 export function setupProductManager(window) {
   mainWindow = window
 
-  // Ensure C:\MOLLY_Multiloader exists
+  // Ensure C:\Launcher_Mollys exists
   if (!existsSync(MOLLY_FOLDER)) {
     mkdirSync(MOLLY_FOLDER, { recursive: true })
-    log.info('Created MOLLY_Multiloader folder')
+    log.info('Created Launcher_Mollys folder')
   }
 
   // IPC handlers
@@ -32,6 +38,213 @@ export function setupProductManager(window) {
 
   ipcMain.handle('products:syncWithGithub', async () => {
     return await syncProductsWithGithub()
+  })
+
+  ipcMain.handle('products:downloadLoader', async (event, productId) => {
+    return await downloadLoader(productId)
+  })
+
+  // Start automatic version check every 5 minutes
+  startAutoCheck()
+}
+
+function startAutoCheck() {
+  // Initial check after 30 seconds (give time for app to fully load)
+  setTimeout(async () => {
+    log.info('[ProductManager] Running initial loader version check...')
+    await silentCheckForLoaderUpdates()
+  }, 30000)
+
+  // Then check every 5 minutes
+  checkInterval = setInterval(async () => {
+    log.info('[ProductManager] Running scheduled loader version check...')
+    await silentCheckForLoaderUpdates()
+  }, CHECK_INTERVAL)
+
+  log.info(`[ProductManager] Auto-check started (every ${CHECK_INTERVAL / 60000} minutes)`)
+}
+
+async function silentCheckForLoaderUpdates() {
+  try {
+    // Fetch remote data using GitHub API
+    const remoteData = await fetchLoaderVersionsFromAPI()
+
+    if (!existsSync(LOCAL_LOADER_VERSIONS)) {
+      // First time - sync everything
+      await syncProductsWithGithub()
+      sendToRenderer('loader:products-synced')
+      return
+    }
+
+    const localData = JSON.parse(readFileSync(LOCAL_LOADER_VERSIONS, 'utf-8'))
+
+    // Find loaders that need updates (only for downloaded ones)
+    const updatesToDownload = []
+
+    for (const [id, remoteProduct] of Object.entries(remoteData)) {
+      const localProduct = localData[id]
+      const productFolder = join(MOLLY_FOLDER, id)
+      const exePath = join(productFolder, remoteProduct.OriginalFileName || '')
+
+      // Check if this loader is already downloaded
+      const isDownloaded = existsSync(exePath)
+
+      if (isDownloaded) {
+        // Check if version changed
+        if (!localProduct || localProduct.Version !== remoteProduct.Version) {
+          log.info(`[ProductManager] Update available for ${remoteProduct.DisplayName}: ${localProduct?.Version || 'N/A'} -> ${remoteProduct.Version}`)
+          updatesToDownload.push({
+            id,
+            name: remoteProduct.DisplayName || id,
+            oldVersion: localProduct?.Version || 'N/A',
+            newVersion: remoteProduct.Version,
+            downloadUrl: remoteProduct.DownloadUrl,
+            fileName: remoteProduct.OriginalFileName
+          })
+        }
+      }
+    }
+
+    // Auto-download updates for downloaded loaders
+    if (updatesToDownload.length > 0) {
+      log.info(`[ProductManager] Auto-downloading ${updatesToDownload.length} loader update(s)...`)
+
+      sendToRenderer('loader:updates-available', {
+        updates: updatesToDownload,
+        count: updatesToDownload.length
+      })
+
+      for (const update of updatesToDownload) {
+        try {
+          sendToRenderer('loader:download-started', { id: update.id, name: update.name })
+
+          await downloadLoaderFile(update.id, update.downloadUrl, update.fileName)
+
+          log.info(`[ProductManager] Successfully updated ${update.name}`)
+          sendToRenderer('loader:download-complete', { id: update.id, name: update.name })
+        } catch (error) {
+          log.error(`[ProductManager] Failed to update ${update.name}:`, error)
+          sendToRenderer('loader:download-error', { id: update.id, name: update.name, error: error.message })
+        }
+      }
+    }
+
+    // Sync the local JSON with remote
+    await syncProductsWithGithub()
+
+    // Notify renderer to refresh products list
+    sendToRenderer('loader:products-synced')
+
+  } catch (error) {
+    log.error('[ProductManager] Error during silent check:', error)
+  }
+}
+
+async function downloadLoader(productId) {
+  try {
+    // Get product info from local or remote
+    let products
+    if (existsSync(LOCAL_LOADER_VERSIONS)) {
+      products = JSON.parse(readFileSync(LOCAL_LOADER_VERSIONS, 'utf-8'))
+    } else {
+      products = await fetchLoaderVersionsFromAPI()
+    }
+
+    const product = products[productId]
+    if (!product) {
+      return { success: false, error: 'Product not found' }
+    }
+
+    sendToRenderer('loader:download-started', { id: productId, name: product.DisplayName })
+
+    await downloadLoaderFile(productId, product.DownloadUrl, product.OriginalFileName)
+
+    sendToRenderer('loader:download-complete', { id: productId, name: product.DisplayName })
+
+    return { success: true }
+  } catch (error) {
+    log.error(`[ProductManager] Error downloading loader ${productId}:`, error)
+    sendToRenderer('loader:download-error', { id: productId, error: error.message })
+    return { success: false, error: error.message }
+  }
+}
+
+async function downloadLoaderFile(productId, downloadUrl, fileName) {
+  return new Promise((resolve, reject) => {
+    const productFolder = join(MOLLY_FOLDER, productId)
+    const filePath = join(productFolder, fileName)
+
+    // Ensure folder exists
+    if (!existsSync(productFolder)) {
+      mkdirSync(productFolder, { recursive: true })
+    }
+
+    // Delete old file if exists
+    if (existsSync(filePath)) {
+      try {
+        unlinkSync(filePath)
+      } catch (e) {
+        log.warn(`Could not delete old file: ${e.message}`)
+      }
+    }
+
+    log.info(`[ProductManager] Downloading ${fileName} to ${filePath}`)
+
+    const file = createWriteStream(filePath)
+
+    const doRequest = (url) => {
+      const isHttps = url.startsWith('https')
+      const getter = isHttps ? httpsGet : httpGet
+
+      getter(url, (response) => {
+        // Handle redirects
+        if (response.statusCode === 301 || response.statusCode === 302 || response.statusCode === 307) {
+          const redirectUrl = response.headers.location
+          log.info(`[ProductManager] Following redirect to ${redirectUrl}`)
+          doRequest(redirectUrl)
+          return
+        }
+
+        if (response.statusCode !== 200) {
+          file.close()
+          unlinkSync(filePath)
+          reject(new Error(`Download failed with status ${response.statusCode}`))
+          return
+        }
+
+        const totalSize = parseInt(response.headers['content-length'], 10) || 0
+        let downloadedSize = 0
+
+        response.on('data', (chunk) => {
+          downloadedSize += chunk.length
+          if (totalSize > 0) {
+            const percent = Math.round((downloadedSize / totalSize) * 100)
+            sendToRenderer('loader:download-progress', {
+              id: productId,
+              percent,
+              downloaded: downloadedSize,
+              total: totalSize
+            })
+          }
+        })
+
+        response.pipe(file)
+
+        file.on('finish', () => {
+          file.close()
+          log.info(`[ProductManager] Download complete: ${filePath}`)
+          resolve()
+        })
+      }).on('error', (error) => {
+        file.close()
+        if (existsSync(filePath)) {
+          unlinkSync(filePath)
+        }
+        reject(error)
+      })
+    }
+
+    doRequest(downloadUrl)
   })
 }
 
@@ -77,8 +290,8 @@ async function getAllProducts() {
 
 async function checkProductUpdates() {
   try {
-    // Fetch latest loader_versions.json from GitHub
-    const remoteData = await fetchJSON(LOADER_VERSIONS_URL)
+    // Fetch latest loader_versions.json from GitHub API
+    const remoteData = await fetchLoaderVersionsFromAPI()
 
     if (!existsSync(LOCAL_LOADER_VERSIONS)) {
       return {
@@ -99,7 +312,9 @@ async function checkProductUpdates() {
           id,
           name: remoteProduct.DisplayName || id,
           oldVersion: localProduct?.Version || 'N/A',
-          newVersion: remoteProduct.Version
+          newVersion: remoteProduct.Version,
+          downloadUrl: remoteProduct.DownloadUrl,
+          originalFileName: remoteProduct.OriginalFileName
         })
       }
     }
@@ -122,8 +337,8 @@ async function syncProductsWithGithub() {
   try {
     log.info('Syncing products with GitHub...')
 
-    // Fetch latest loader_versions.json
-    const remoteData = await fetchJSON(LOADER_VERSIONS_URL)
+    // Fetch latest loader_versions.json using GitHub API
+    const remoteData = await fetchLoaderVersionsFromAPI()
 
     // Update LastCheck timestamp for all products
     const now = new Date().toISOString()
@@ -164,6 +379,45 @@ async function syncProductsWithGithub() {
       error: error.message
     }
   }
+}
+
+async function fetchLoaderVersionsFromAPI() {
+  return new Promise((resolve, reject) => {
+    const url = `${LOADER_VERSIONS_API_URL}?ref=main&t=${Date.now()}`
+
+    const options = {
+      headers: {
+        'User-Agent': 'MollysLauncher',
+        'Accept': 'application/vnd.github.v3+json',
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache'
+      }
+    }
+
+    httpsGet(url, options, (response) => {
+      if (response.statusCode !== 200) {
+        reject(new Error(`GitHub API failed: ${response.statusCode}`))
+        return
+      }
+
+      let data = ''
+      response.on('data', (chunk) => {
+        data += chunk
+      })
+
+      response.on('end', () => {
+        try {
+          const apiResponse = JSON.parse(data)
+          // Decode base64 content from GitHub API
+          const content = Buffer.from(apiResponse.content, 'base64').toString('utf-8')
+          const loaderVersions = JSON.parse(content)
+          resolve(loaderVersions)
+        } catch (error) {
+          reject(error)
+        }
+      })
+    }).on('error', reject)
+  })
 }
 
 function fetchJSON(url) {
