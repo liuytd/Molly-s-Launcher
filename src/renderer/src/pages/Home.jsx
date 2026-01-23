@@ -77,8 +77,9 @@ export default function Home() {
     navigate(`/category/${categoryId}`)
   }
 
+  // Filter categories: show categories that contain at least one favorite loader
   const filteredCategories = filter === 'favorites'
-    ? categories.filter(c => favorites.includes(c.id))
+    ? categories.filter(c => c.loaders.some(loader => favorites.includes(loader.id)))
     : categories
 
   return (

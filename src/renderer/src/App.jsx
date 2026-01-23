@@ -105,7 +105,7 @@ export default function App() {
         setLoadingText('NEW VERSION FOUND!')
         setTimeout(() => {
           setLoadingText('DOWNLOADING UPDATE...')
-          window.api.installUpdate(data.downloadUrl)
+          window.api.installUpdate(data.downloadUrl, data.version)
         }, 1000)
       })
 

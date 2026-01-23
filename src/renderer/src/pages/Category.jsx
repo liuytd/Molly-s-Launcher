@@ -90,7 +90,11 @@ export default function Category() {
     }
 
     try {
-      const result = await window.api.launchExeAsAdmin({ path: loader.exePath })
+      // Pass productId to find the most recent exe in the folder
+      const result = await window.api.launchExeAsAdmin({
+        path: loader.exePath,
+        productId: loader.id
+      })
       if (result.success) {
         toast.success(`${loader.name} lancé`)
       } else {
@@ -156,22 +160,23 @@ export default function Category() {
       </div>
 
       {/* Loaders list */}
-      <div className="flex-1 overflow-y-auto space-y-2">
+      <div className="flex-1 overflow-y-auto">
         {loaders.length === 0 ? (
           <div className="h-full flex flex-col items-center justify-center text-center">
             <p className="text-[var(--color-text-muted)]">Aucun loader dans cette catégorie</p>
           </div>
         ) : (
-          loaders.map((loader, index) => {
-            const isDownloading = !!downloadingLoaders[loader.id]
-            const isFavorite = favorites.includes(loader.id)
+          <div className="flex flex-col items-center gap-3 py-2">
+            {loaders.map((loader, index) => {
+              const isDownloading = !!downloadingLoaders[loader.id]
+              const isFavorite = favorites.includes(loader.id)
 
-            return (
-              <div
-                key={loader.id}
-                className="glass rounded-xl p-3 flex items-center justify-between animate-fade-in"
-                style={{ animationDelay: `${index * 50}ms` }}
-              >
+              return (
+                <div
+                  key={loader.id}
+                  className="w-[80%] glass rounded-xl p-4 flex items-center justify-between animate-fade-in"
+                  style={{ animationDelay: `${index * 50}ms` }}
+                >
                 <div className="flex items-center gap-3">
                   {/* Status indicator */}
                   <div
@@ -233,10 +238,11 @@ export default function Category() {
                     <Play size={14} />
                     Launch
                   </button>
+                  </div>
                 </div>
-              </div>
-            )
-          })
+              )
+            })}
+          </div>
         )}
       </div>
     </div>

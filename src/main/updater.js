@@ -34,7 +34,16 @@ export function setupUpdater(window) {
   })
 
   updater.on('update-available', (info) => {
-    log.info('Update available:', info.version)
+    const currentVersion = app.getVersion()
+    log.info('Update available:', info.version, 'Current:', currentVersion)
+
+    // Compare versions - only update if remote version is actually newer
+    if (info.version === currentVersion) {
+      log.info('Same version detected, skipping update')
+      sendToRenderer('updater:not-available')
+      return
+    }
+
     sendToRenderer('updater:available', {
       version: info.version,
       releaseDate: info.releaseDate,
@@ -60,7 +69,15 @@ export function setupUpdater(window) {
   })
 
   updater.on('update-downloaded', (info) => {
-    log.info('Update downloaded:', info.version)
+    const currentVersion = app.getVersion()
+    log.info('Update downloaded:', info.version, 'Current:', currentVersion)
+
+    // Don't install if it's the same version (prevent loop)
+    if (info.version === currentVersion) {
+      log.info('Downloaded same version, not installing to prevent loop')
+      return
+    }
+
     sendToRenderer('updater:downloaded', {
       version: info.version
     })

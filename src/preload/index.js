@@ -22,7 +22,7 @@ const api = {
 
   // Updater
   checkForUpdates: () => ipcRenderer.invoke('updater:check'),
-  installUpdate: (downloadUrl) => ipcRenderer.invoke('updater:install', downloadUrl),
+  installUpdate: (downloadUrl, targetVersion) => ipcRenderer.invoke('updater:install', downloadUrl, targetVersion),
   getUpdaterVersion: () => ipcRenderer.invoke('updater:getVersion'),
 
   // Updater events

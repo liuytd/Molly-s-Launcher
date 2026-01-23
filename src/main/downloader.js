@@ -109,19 +109,33 @@ export function setupDownloader() {
   })
 
   // Launch an EXE as Administrator
-  ipcMain.handle('exe:launchAsAdmin', async (_, { path }) => {
+  ipcMain.handle('exe:launchAsAdmin', async (_, { path, productId }) => {
     try {
-      if (!existsSync(path)) {
+      let exePath = path
+
+      // If productId is provided, find the most recent .exe in the product folder
+      if (productId) {
+        const productFolder = join(MOLLY_FOLDER, productId)
+        if (existsSync(productFolder)) {
+          const mostRecentExe = findMostRecentExe(productFolder)
+          if (mostRecentExe) {
+            exePath = mostRecentExe
+            log.info(`Found most recent exe for ${productId}: ${exePath}`)
+          }
+        }
+      }
+
+      if (!exePath || !existsSync(exePath)) {
         return {
           success: false,
           error: 'File not found'
         }
       }
 
-      log.info(`Launching ${path} as Administrator`)
+      log.info(`Launching ${exePath} as Administrator`)
 
       // Use PowerShell to run as admin with hidden window
-      const psCommand = `Start-Process -FilePath '${path}' -Verb RunAs`
+      const psCommand = `Start-Process -FilePath '${exePath}' -Verb RunAs`
 
       exec(`powershell -WindowStyle Hidden -Command "${psCommand}"`, (error) => {
         if (error) {
@@ -129,7 +143,7 @@ export function setupDownloader() {
         }
       })
 
-      return { success: true }
+      return { success: true, launchedPath: exePath }
     } catch (error) {
       log.error('Launch as admin error:', error)
       return {
@@ -305,4 +319,28 @@ function formatBytes(bytes) {
   const sizes = ['B', 'KB', 'MB', 'GB']
   const i = Math.floor(Math.log(bytes) / Math.log(k))
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
+}
+
+// Find the most recent .exe file in a folder
+function findMostRecentExe(folderPath) {
+  try {
+    const files = readdirSync(folderPath)
+    const exeFiles = files.filter(f => f.toLowerCase().endsWith('.exe'))
+
+    if (exeFiles.length === 0) return null
+
+    // Sort by modification time (most recent first)
+    const sortedFiles = exeFiles
+      .map(f => ({
+        name: f,
+        path: join(folderPath, f),
+        mtime: statSync(join(folderPath, f)).mtime
+      }))
+      .sort((a, b) => b.mtime - a.mtime)
+
+    return sortedFiles[0].path
+  } catch (error) {
+    log.error('Error finding most recent exe:', error)
+    return null
+  }
 }

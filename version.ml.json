@@ -1,10 +1,11 @@
 {
-  "version": "1.3.4",
-  "downloadUrl": "https://github.com/liuytd/Molly-s-Launcher/releases/download/v1.3.4/MollysLauncher-setup.exe",
+  "version": "1.3.7",
+  "downloadUrl": "https://github.com/liuytd/Molly-s-Launcher/releases/download/v1.3.7/MollysLauncher-setup.exe",
   "changelog": [
-    "Download button saves to Downloads folder",
-    "Launch button with text",
-    "Fixed admin launch (hidden PowerShell)",
-    "Removed bottom info message"
+    "Fixed update loop bug with skip version system",
+    "Loader cards 80% width and centered",
+    "Fixed favorites filter (shows categories with favorite loaders)",
+    "Launch button now finds most recent exe in folder",
+    "Skip placeholder folders creation"
   ]
 }

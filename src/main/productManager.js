@@ -399,8 +399,11 @@ async function syncProductsWithGithub() {
       log.error('Error syncing version.ml.json:', error)
     }
 
-    // Create product folders if they don't exist
+    // Create product folders if they don't exist (skip placeholders)
     for (const [id, product] of Object.entries(remoteData)) {
+      // Skip placeholders - they don't need folders
+      if (id.includes('-placeholder') || product.IsPlaceholder) continue
+
       const productFolder = join(MOLLY_FOLDER, id)
       if (!existsSync(productFolder)) {
         mkdirSync(productFolder, { recursive: true })
