@@ -23,7 +23,8 @@
       "Bash(python create-release.py:*)",
       "Bash(node release.js:*)",
       "Bash(npm run release:*)",
-      "Bash(if not exist \"resources\\\\game-logos\" mkdir resourcesgame-logos)"
+      "Bash(if not exist \"resources\\\\game-logos\" mkdir resourcesgame-logos)",
+      "Bash(copy:*)"
     ]
   }
 }
