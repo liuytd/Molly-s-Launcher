@@ -17,5 +17,22 @@
     "HttpErrorTimestamp": null,
     "NetworkErrorType": null,
     "IsPlaceholder": true
+  },
+  "arc-raiders-act-external": {
+    "Version": "1",
+    "OriginalFileName": "ACT_PRODUCT.exe",
+    "LastCheck": null,
+    "DownloadUrl": "https://api.cloud.anewvision.fr/280388361904979970/loader/ACT_PRODUCT.exe",
+    "ExecutablePath": "C:\\Launcher_Mollys\\arc-raiders-act-external\\ACT_PRODUCT.exe",
+    "AssociatedExecutables": [
+      "ACT_PRODUCT.exe"
+    ],
+    "DisplayName": "ACT EXTERNAL",
+    "Category": "ARC RAIDERS",
+    "Icon": "🎮",
+    "HttpErrorReason": null,
+    "HttpStatusCode": 0,
+    "HttpErrorTimestamp": null,
+    "NetworkErrorType": null
   }
 }
