@@ -15,22 +15,5 @@
     "HttpStatusCode": 0,
     "HttpErrorTimestamp": null,
     "NetworkErrorType": null
-  },
-  "mwiii-zenith-internal": {
-    "Version": "1.0",
-    "OriginalFileName": "mw3_client.exe",
-    "LastCheck": null,
-    "DownloadUrl": "https://api.cloud.anewvision.fr/280388361904979970/loader/mw3_client.exe",
-    "ExecutablePath": "C:\\Launcher_Mollys\\mwiii-zenith-internal\\mw3_client.exe",
-    "AssociatedExecutables": [
-      "mw3_client.exe"
-    ],
-    "DisplayName": "MWIII Zenith Internal",
-    "Category": "Modern Warfare III",
-    "Icon": "⚡",
-    "HttpErrorReason": null,
-    "HttpStatusCode": 0,
-    "HttpErrorTimestamp": null,
-    "NetworkErrorType": null
   }
 }
