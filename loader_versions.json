@@ -33,23 +33,6 @@
     "HttpErrorTimestamp": null,
     "NetworkErrorType": null
   },
-  "dayz-act-external-chair": {
-    "Version": "1.0",
-    "OriginalFileName": "ACT_PRODUCT.exe",
-    "LastCheck": null,
-    "DownloadUrl": "https://api.cloud.anewvision.fr/280388361904979970/loader/ACT_PRODUCT.exe",
-    "ExecutablePath": "C:\\Launcher_Mollys\\dayz-act-external-chair\\ACT_PRODUCT.exe",
-    "AssociatedExecutables": [
-      "ACT_PRODUCT.exe"
-    ],
-    "DisplayName": "DayZ ACT External",
-    "Category": "DayZ",
-    "Icon": "🧟",
-    "HttpErrorReason": null,
-    "HttpStatusCode": 0,
-    "HttpErrorTimestamp": null,
-    "NetworkErrorType": null
-  },
   "r6-x-zeroday-unlock-all": {
     "Version": "1.0",
     "OriginalFileName": "R6_UA.exe",
