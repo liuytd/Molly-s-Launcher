@@ -16,39 +16,6 @@ export default function Category() {
 
     if (window.api) {
       window.api.getFavorites().then(setFavorites)
-
-      // Listen for download events
-      const unsubProgress = window.api.onLoaderDownloadProgress((data) => {
-        setDownloadingLoaders(prev => ({
-          ...prev,
-          [data.id]: { ...prev[data.id], percent: data.percent }
-        }))
-      })
-
-      const unsubComplete = window.api.onLoaderDownloadComplete((data) => {
-        setDownloadingLoaders(prev => {
-          const updated = { ...prev }
-          delete updated[data.id]
-          return updated
-        })
-        toast.success(`${data.name} téléchargé!`)
-        loadCategoryData()
-      })
-
-      const unsubError = window.api.onLoaderDownloadError((data) => {
-        setDownloadingLoaders(prev => {
-          const updated = { ...prev }
-          delete updated[data.id]
-          return updated
-        })
-        toast.error(`Échec: ${data.error}`)
-      })
-
-      return () => {
-        if (unsubProgress) unsubProgress()
-        if (unsubComplete) unsubComplete()
-        if (unsubError) unsubError()
-      }
     }
   }, [categoryId])
 
@@ -96,36 +63,36 @@ export default function Category() {
       return
     }
 
-    setDownloadingLoaders(prev => ({
-      ...prev,
-      [loader.id]: { downloading: true, percent: 0 }
-    }))
+    setDownloadingLoaders(prev => ({ ...prev, [loader.id]: true }))
 
     try {
-      const result = await window.api.downloadLoader(loader.id)
-      if (!result.success) {
+      const result = await window.api.downloadToDownloads({
+        url: loader.downloadUrl,
+        filename: loader.originalFileName || `${loader.name}.exe`
+      })
+
+      if (result.success) {
+        toast.success(`${loader.name} téléchargé dans Downloads`)
+      } else {
         toast.error(`Échec: ${result.error}`)
-        setDownloadingLoaders(prev => {
-          const updated = { ...prev }
-          delete updated[loader.id]
-          return updated
-        })
       }
     } catch (error) {
       toast.error(`Échec: ${error.message}`)
-      setDownloadingLoaders(prev => {
-        const updated = { ...prev }
-        delete updated[loader.id]
-        return updated
-      })
+    } finally {
+      setDownloadingLoaders(prev => ({ ...prev, [loader.id]: false }))
     }
   }
 
   const handleLaunch = async (loader) => {
+    if (!loader.isDownloaded) {
+      toast.error('Loader non installé')
+      return
+    }
+
     try {
       const result = await window.api.launchExeAsAdmin({ path: loader.exePath })
       if (result.success) {
-        toast.success(`${loader.name} lancé en admin`)
+        toast.success(`${loader.name} lancé`)
       } else {
         toast.error(`Échec: ${result.error}`)
       }
@@ -197,7 +164,6 @@ export default function Category() {
         ) : (
           loaders.map((loader, index) => {
             const isDownloading = !!downloadingLoaders[loader.id]
-            const downloadPercent = downloadingLoaders[loader.id]?.percent || 0
             const isFavorite = favorites.includes(loader.id)
 
             return (
@@ -258,27 +224,20 @@ export default function Category() {
                   <button
                     onClick={() => handleLaunch(loader)}
                     disabled={!loader.isDownloaded}
-                    className={`p-2 rounded-lg transition-all ${
+                    className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
                       loader.isDownloaded
                         ? 'bg-green-500/20 text-green-400 hover:bg-green-500/30'
                         : 'bg-gray-500/20 text-gray-500 cursor-not-allowed'
                     }`}
-                    title={loader.isDownloaded ? 'Lancer en admin' : 'Téléchargez d\'abord'}
                   >
-                    <Play size={16} />
+                    <Play size={14} />
+                    Launch
                   </button>
                 </div>
               </div>
             )
           })
         )}
-      </div>
-
-      {/* Bottom info */}
-      <div className="mt-4 text-center">
-        <p className="text-xs text-[var(--color-text-muted)]">
-          Les loaders sont stockés dans C:\Launcher_Mollys
-        </p>
       </div>
     </div>
   )

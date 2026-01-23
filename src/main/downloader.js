@@ -1,10 +1,10 @@
-import { ipcMain, shell } from 'electron'
+import { ipcMain, shell, app } from 'electron'
 import { join } from 'path'
 import { createWriteStream, existsSync, mkdirSync, unlinkSync, statSync, readFileSync, writeFileSync, readdirSync } from 'fs'
 import { get } from 'https'
 import { get as httpGet } from 'http'
 import log from 'electron-log'
-import { spawn } from 'child_process'
+import { spawn, exec } from 'child_process'
 
 const MOLLY_FOLDER = 'C:\\Launcher_Mollys'
 const LOCAL_LOADER_VERSIONS = join(MOLLY_FOLDER, 'loader_versions.json')
@@ -120,17 +120,14 @@ export function setupDownloader() {
 
       log.info(`Launching ${path} as Administrator`)
 
-      // Use PowerShell to run as admin
-      const child = spawn('powershell.exe', [
-        '-Command',
-        `Start-Process -FilePath "${path}" -Verb RunAs`
-      ], {
-        detached: true,
-        stdio: 'ignore',
-        shell: true
-      })
+      // Use PowerShell to run as admin with hidden window
+      const psCommand = `Start-Process -FilePath '${path}' -Verb RunAs`
 
-      child.unref()
+      exec(`powershell -WindowStyle Hidden -Command "${psCommand}"`, (error) => {
+        if (error) {
+          log.error('Launch as admin exec error:', error)
+        }
+      })
 
       return { success: true }
     } catch (error) {
@@ -139,6 +136,26 @@ export function setupDownloader() {
         success: false,
         error: error.message
       }
+    }
+  })
+
+  // Download file to user's Downloads folder
+  ipcMain.handle('download:toDownloads', async (_, { url, filename }) => {
+    try {
+      const downloadsPath = app.getPath('downloads')
+      const filePath = join(downloadsPath, filename)
+
+      log.info(`Downloading ${filename} to ${downloadsPath}`)
+
+      await downloadFile(url, filePath, () => {})
+
+      // Open the downloads folder
+      shell.showItemInFolder(filePath)
+
+      return { success: true, path: filePath }
+    } catch (error) {
+      log.error('Download to downloads error:', error)
+      return { success: false, error: error.message }
     }
   })
 

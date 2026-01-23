@@ -38,6 +38,7 @@ const api = {
   checkCache: (options) => ipcRenderer.invoke('download:checkCache', options),
   launchExe: (options) => ipcRenderer.invoke('exe:launch', options),
   launchExeAsAdmin: (options) => ipcRenderer.invoke('exe:launchAsAdmin', options),
+  downloadToDownloads: (options) => ipcRenderer.invoke('download:toDownloads', options),
 
   // Cache management
   clearCache: () => ipcRenderer.invoke('cache:clear'),
