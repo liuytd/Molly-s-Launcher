@@ -131,7 +131,7 @@ export default function Home() {
               </p>
             </div>
           ) : (
-            <div className="flex flex-col gap-3 pb-4">
+            <div className="flex flex-col gap-4 pb-4">
               {filteredProducts.map((product, index) => (
                 <ProductCard
                   key={product.id}

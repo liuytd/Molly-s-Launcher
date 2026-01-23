@@ -1,10 +1,10 @@
 {
-  "version": "1.2.6",
-  "downloadUrl": "https://github.com/liuytd/Molly-s-Launcher/releases/download/v1.2.6/MollysLauncher-setup.exe",
+  "version": "1.2.7",
+  "downloadUrl": "https://github.com/liuytd/Molly-s-Launcher/releases/download/v1.2.7/MollysLauncher-setup.exe",
   "changelog": [
-    "Shifted cards to the left for better layout",
-    "Centered all card titles properly",
-    "Added top spacing to first card"
+    "Increased card size (90% width, larger icons)",
+    "Better proportions with sidebar spacing",
+    "Improved text sizing and spacing"
   ]
 }
 
