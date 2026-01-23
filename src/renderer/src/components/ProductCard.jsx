@@ -2,12 +2,12 @@ export default function ProductCard({ product, onClick, style }) {
   return (
     <div
       onClick={onClick}
-      className="glass rounded-xl p-4 cursor-pointer transition-all duration-200 hover:translate-x-1 hover:glow-purple animate-fade-in group relative flex items-center gap-6 w-[90%]"
+      className="glass rounded-xl p-4 cursor-pointer transition-all duration-200 hover:translate-x-1 hover:glow-purple animate-fade-in group relative flex items-center w-[90%]"
       style={style}
     >
       {/* Icon */}
       <div
-        className="w-16 h-16 rounded-xl flex items-center justify-center text-3xl flex-shrink-0"
+        className="w-16 h-16 rounded-xl flex items-center justify-center text-3xl flex-shrink-0 ml-4"
         style={{
           background: `linear-gradient(135deg, ${product.color}20, ${product.color}40)`,
           border: `1px solid ${product.color}50`,
@@ -18,8 +18,8 @@ export default function ProductCard({ product, onClick, style }) {
       </div>
 
       {/* Content */}
-      <div className="flex-1 min-w-0 flex flex-col items-center justify-center">
-        <h3 className="text-base font-medium text-[var(--color-text)] truncate w-full text-center">
+      <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+        <h3 className="text-base font-medium text-[var(--color-text)] truncate max-w-[60%]">
           {product.name}
         </h3>
         <p className="text-sm text-[var(--color-text-muted)] mt-1">
