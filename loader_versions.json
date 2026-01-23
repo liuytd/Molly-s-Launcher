@@ -1,1 +1,21 @@
-{}
+{
+  "arc-raiders-placeholder": {
+    "Version": "1.0",
+    "OriginalFileName": "PLACEHOLDER.exe",
+    "LastCheck": null,
+    "DownloadUrl": "",
+    "ExecutablePath": "C:\\Launcher_Mollys\\arc-raiders-placeholder\\PLACEHOLDER.exe",
+    "AssociatedExecutables": [
+      "PLACEHOLDER.exe"
+    ],
+    "DisplayName": "ARC RAIDERS (Placeholder)",
+    "Category": "ARC RAIDERS",
+    "Icon": "https://raw.githubusercontent.com/liuytd/Molly-s-Launcher/main/ML_CATEGORIES/ARC_RAIDERS.png",
+    "Color": "#8b5cf6",
+    "HttpErrorReason": null,
+    "HttpStatusCode": 0,
+    "HttpErrorTimestamp": null,
+    "NetworkErrorType": null,
+    "IsPlaceholder": true
+  }
+}
