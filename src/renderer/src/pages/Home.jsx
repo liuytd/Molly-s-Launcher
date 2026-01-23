@@ -90,7 +90,7 @@ export default function Home() {
 
         {/* Discord */}
         <button
-          onClick={() => window.open('https://discord.gg/your-server', '_blank')}
+          onClick={() => window.open('https://discord.gg/xK3sfUHn6s', '_blank')}
           className="p-3 rounded-lg text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:bg-[var(--color-primary)]/10 transition-all"
           title="Discord"
         >
@@ -99,7 +99,7 @@ export default function Home() {
 
         {/* Website */}
         <button
-          onClick={() => window.open('https://your-website.com', '_blank')}
+          onClick={() => window.open('https://mollys.mysellauth.com/', '_blank')}
           className="p-3 rounded-lg text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:bg-[var(--color-primary)]/10 transition-all"
           title="Website"
         >

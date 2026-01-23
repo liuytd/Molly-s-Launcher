@@ -1,10 +1,9 @@
 {
-  "version": "1.2.8",
-  "downloadUrl": "https://github.com/liuytd/Molly-s-Launcher/releases/download/v1.2.8/MollysLauncher-setup.exe",
+  "version": "1.2.9",
+  "downloadUrl": "https://github.com/liuytd/Molly-s-Launcher/releases/download/v1.2.9/MollysLauncher-setup.exe",
   "changelog": [
-    "Perfectly centered card titles",
-    "Fixed text alignment issue",
-    "Improved visual balance"
+    "Updated Discord link",
+    "Updated Website link"
   ]
 }
 
