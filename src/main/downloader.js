@@ -108,6 +108,40 @@ export function setupDownloader() {
     }
   })
 
+  // Launch an EXE as Administrator
+  ipcMain.handle('exe:launchAsAdmin', async (_, { path }) => {
+    try {
+      if (!existsSync(path)) {
+        return {
+          success: false,
+          error: 'File not found'
+        }
+      }
+
+      log.info(`Launching ${path} as Administrator`)
+
+      // Use PowerShell to run as admin
+      const child = spawn('powershell.exe', [
+        '-Command',
+        `Start-Process -FilePath "${path}" -Verb RunAs`
+      ], {
+        detached: true,
+        stdio: 'ignore',
+        shell: true
+      })
+
+      child.unref()
+
+      return { success: true }
+    } catch (error) {
+      log.error('Launch as admin error:', error)
+      return {
+        success: false,
+        error: error.message
+      }
+    }
+  })
+
   // Clear all cached files
   ipcMain.handle('cache:clear', async () => {
     try {

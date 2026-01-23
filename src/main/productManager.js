@@ -49,11 +49,13 @@ export function setupProductManager(window) {
 }
 
 function startAutoCheck() {
-  // Initial check after 30 seconds (give time for app to fully load)
+  // Initial sync and download after 5 seconds
   setTimeout(async () => {
-    log.info('[ProductManager] Running initial loader version check...')
-    await silentCheckForLoaderUpdates()
-  }, 30000)
+    log.info('[ProductManager] Running initial sync and download...')
+    await syncProductsWithGithub()
+    await downloadAllLoaders()
+    sendToRenderer('loader:products-synced')
+  }, 5000)
 
   // Then check every 5 minutes
   checkInterval = setInterval(async () => {
@@ -62,6 +64,44 @@ function startAutoCheck() {
   }, CHECK_INTERVAL)
 
   log.info(`[ProductManager] Auto-check started (every ${CHECK_INTERVAL / 60000} minutes)`)
+}
+
+async function downloadAllLoaders() {
+  try {
+    const remoteData = await fetchLoaderVersionsFromAPI()
+
+    for (const [id, product] of Object.entries(remoteData)) {
+      // Skip placeholders
+      if (id.includes('-placeholder')) continue
+      // Skip if no download URL
+      if (!product.DownloadUrl) continue
+
+      const productFolder = join(MOLLY_FOLDER, id)
+      const exePath = join(productFolder, product.OriginalFileName || '')
+
+      // Skip if already downloaded
+      if (existsSync(exePath)) {
+        log.info(`[ProductManager] ${product.DisplayName || id} already downloaded`)
+        continue
+      }
+
+      log.info(`[ProductManager] Auto-downloading ${product.DisplayName || id}...`)
+      sendToRenderer('loader:download-started', { id, name: product.DisplayName || id })
+
+      try {
+        await downloadLoaderFile(id, product.DownloadUrl, product.OriginalFileName)
+        log.info(`[ProductManager] Successfully downloaded ${product.DisplayName || id}`)
+        sendToRenderer('loader:download-complete', { id, name: product.DisplayName || id })
+      } catch (error) {
+        log.error(`[ProductManager] Failed to download ${product.DisplayName || id}:`, error)
+        sendToRenderer('loader:download-error', { id, name: product.DisplayName || id, error: error.message })
+      }
+    }
+
+    log.info('[ProductManager] All loaders download check complete')
+  } catch (error) {
+    log.error('[ProductManager] Error in downloadAllLoaders:', error)
+  }
 }
 
 async function silentCheckForLoaderUpdates() {

@@ -1,6 +1,6 @@
 {
   "name": "mollys-launcher",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "description": "Mollys Launcher - MultiLoader for Mollys products",
   "main": "./out/main/index.js",
   "author": "liuytd",

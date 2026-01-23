@@ -31,8 +31,8 @@ export default function Category() {
           delete updated[data.id]
           return updated
         })
-        toast.success(`${data.name} downloaded!`)
-        loadCategoryData() // Refresh to update isDownloaded status
+        toast.success(`${data.name} téléchargé!`)
+        loadCategoryData()
       })
 
       const unsubError = window.api.onLoaderDownloadError((data) => {
@@ -41,7 +41,7 @@ export default function Category() {
           delete updated[data.id]
           return updated
         })
-        toast.error(`Download failed: ${data.error}`)
+        toast.error(`Échec: ${data.error}`)
       })
 
       return () => {
@@ -57,13 +57,11 @@ export default function Category() {
 
     const result = await window.api.getAllProducts()
     if (result.success) {
-      // Find loaders for this category
       const categoryLoaders = result.products.filter(product => {
         const productCategoryId = product.category?.toLowerCase().replace(/\s+/g, '-')
         return productCategoryId === categoryId && !product.id.includes('-placeholder')
       })
 
-      // Find placeholder for category info
       const placeholder = result.products.find(
         p => p.id.includes('-placeholder') &&
         p.category?.toLowerCase().replace(/\s+/g, '-') === categoryId
@@ -94,7 +92,7 @@ export default function Category() {
 
   const handleDownload = async (loader) => {
     if (!loader.downloadUrl) {
-      toast.error('Download URL not configured')
+      toast.error('URL de téléchargement non configurée')
       return
     }
 
@@ -106,7 +104,7 @@ export default function Category() {
     try {
       const result = await window.api.downloadLoader(loader.id)
       if (!result.success) {
-        toast.error(`Download failed: ${result.error}`)
+        toast.error(`Échec: ${result.error}`)
         setDownloadingLoaders(prev => {
           const updated = { ...prev }
           delete updated[loader.id]
@@ -114,7 +112,7 @@ export default function Category() {
         })
       }
     } catch (error) {
-      toast.error(`Download failed: ${error.message}`)
+      toast.error(`Échec: ${error.message}`)
       setDownloadingLoaders(prev => {
         const updated = { ...prev }
         delete updated[loader.id]
@@ -124,20 +122,15 @@ export default function Category() {
   }
 
   const handleLaunch = async (loader) => {
-    if (!loader.isDownloaded) {
-      await handleDownload(loader)
-      return
-    }
-
     try {
-      const result = await window.api.launchExe({ path: loader.exePath })
+      const result = await window.api.launchExeAsAdmin({ path: loader.exePath })
       if (result.success) {
-        toast.success(`Launched ${loader.name}`)
+        toast.success(`${loader.name} lancé en admin`)
       } else {
-        toast.error(`Launch failed: ${result.error}`)
+        toast.error(`Échec: ${result.error}`)
       }
     } catch (error) {
-      toast.error(`Launch failed: ${error.message}`)
+      toast.error(`Échec: ${error.message}`)
     }
   }
 
@@ -150,7 +143,7 @@ export default function Category() {
   if (!category) {
     return (
       <div className="h-full flex items-center justify-center">
-        <p className="text-[var(--color-text-muted)]">Category not found</p>
+        <p className="text-[var(--color-text-muted)]">Catégorie non trouvée</p>
       </div>
     )
   }
@@ -178,6 +171,7 @@ export default function Category() {
               src={category.icon}
               alt={category.name}
               className="w-8 h-8 object-contain"
+              onError={(e) => { e.target.style.display = 'none' }}
             />
           ) : (
             category.icon
@@ -189,7 +183,7 @@ export default function Category() {
             {category.name}
           </h1>
           <p className="text-xs text-[var(--color-text-muted)]">
-            {loaders.length} loader{loaders.length !== 1 ? 's' : ''} available
+            {loaders.length} loader{loaders.length !== 1 ? 's' : ''} disponible{loaders.length !== 1 ? 's' : ''}
           </p>
         </div>
       </div>
@@ -198,7 +192,7 @@ export default function Category() {
       <div className="flex-1 overflow-y-auto space-y-2">
         {loaders.length === 0 ? (
           <div className="h-full flex flex-col items-center justify-center text-center">
-            <p className="text-[var(--color-text-muted)]">No loaders in this category</p>
+            <p className="text-[var(--color-text-muted)]">Aucun loader dans cette catégorie</p>
           </div>
         ) : (
           loaders.map((loader, index) => {
@@ -225,7 +219,7 @@ export default function Category() {
                       {loader.name}
                     </h3>
                     <p className="text-xs text-[var(--color-text-muted)]">
-                      v{loader.version} {loader.isDownloaded && '• Downloaded'}
+                      v{loader.version}
                     </p>
                   </div>
                 </div>
@@ -246,32 +240,32 @@ export default function Category() {
                     />
                   </button>
 
-                  {/* Action button */}
+                  {/* Download button */}
                   <button
-                    onClick={() => loader.isDownloaded ? handleLaunch(loader) : handleDownload(loader)}
+                    onClick={() => handleDownload(loader)}
                     disabled={isDownloading}
-                    className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-all min-w-[100px] justify-center ${
-                      loader.isDownloaded
-                        ? 'bg-green-500/20 text-green-400 hover:bg-green-500/30'
-                        : 'bg-[var(--color-primary)]/20 text-[var(--color-primary)] hover:bg-[var(--color-primary)]/30'
-                    } disabled:opacity-50 disabled:cursor-not-allowed`}
+                    className="p-2 rounded-lg bg-[var(--color-primary)]/20 text-[var(--color-primary)] hover:bg-[var(--color-primary)]/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    title="Télécharger"
                   >
                     {isDownloading ? (
-                      <>
-                        <Loader2 size={14} className="animate-spin" />
-                        {downloadPercent}%
-                      </>
-                    ) : loader.isDownloaded ? (
-                      <>
-                        <Play size={14} />
-                        Launch
-                      </>
+                      <Loader2 size={16} className="animate-spin" />
                     ) : (
-                      <>
-                        <Download size={14} />
-                        Download
-                      </>
+                      <Download size={16} />
                     )}
+                  </button>
+
+                  {/* Launch button */}
+                  <button
+                    onClick={() => handleLaunch(loader)}
+                    disabled={!loader.isDownloaded}
+                    className={`p-2 rounded-lg transition-all ${
+                      loader.isDownloaded
+                        ? 'bg-green-500/20 text-green-400 hover:bg-green-500/30'
+                        : 'bg-gray-500/20 text-gray-500 cursor-not-allowed'
+                    }`}
+                    title={loader.isDownloaded ? 'Lancer en admin' : 'Téléchargez d\'abord'}
+                  >
+                    <Play size={16} />
                   </button>
                 </div>
               </div>
@@ -283,7 +277,7 @@ export default function Category() {
       {/* Bottom info */}
       <div className="mt-4 text-center">
         <p className="text-xs text-[var(--color-text-muted)]">
-          Loaders are stored in C:\Launcher_Mollys
+          Les loaders sont stockés dans C:\Launcher_Mollys
         </p>
       </div>
     </div>
