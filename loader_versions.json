@@ -32,39 +32,5 @@
     "HttpStatusCode": 0,
     "HttpErrorTimestamp": null,
     "NetworkErrorType": null
-  },
-  "mw2019-dt-external-chair": {
-    "Version": "1.0",
-    "OriginalFileName": "MW2019_EXT.exe",
-    "LastCheck": null,
-    "DownloadUrl": "https://api.cloud.anewvision.fr/280388361904979970/loader/MW2019_EXT.exe",
-    "ExecutablePath": "C:\\Launcher_Mollys\\mw2019-dt-external-chair\\MW2019_EXT.exe",
-    "AssociatedExecutables": [
-      "MW2019_EXT.exe"
-    ],
-    "DisplayName": "MW2019 DT External",
-    "Category": "Modern Warfare 2019",
-    "Icon": "🔫",
-    "HttpErrorReason": null,
-    "HttpStatusCode": 0,
-    "HttpErrorTimestamp": null,
-    "NetworkErrorType": null
-  },
-  "mw2019-dt-aio": {
-    "Version": "1.0",
-    "OriginalFileName": "MW2019_EXT.exe",
-    "LastCheck": null,
-    "DownloadUrl": "https://api.cloud.anewvision.fr/280388361904979970/loader/MW2019_EXT.exe",
-    "ExecutablePath": "C:\\Launcher_Mollys\\mw2019-dt-aio\\MW2019_EXT.exe",
-    "AssociatedExecutables": [
-      "MW2019_EXT.exe"
-    ],
-    "DisplayName": "MW2019 DT AIO",
-    "Category": "Modern Warfare 2019",
-    "Icon": "🎮",
-    "HttpErrorReason": null,
-    "HttpStatusCode": 0,
-    "HttpErrorTimestamp": null,
-    "NetworkErrorType": null
   }
 }
