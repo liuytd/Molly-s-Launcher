@@ -1,38 +1,4 @@
 {
-  "delta-act-external-chair": {
-    "Version": "1.0",
-    "OriginalFileName": "ACT_PRODUCT.exe",
-    "LastCheck": null,
-    "DownloadUrl": "https://api.cloud.anewvision.fr/280388361904979970/loader/ACT_PRODUCT.exe",
-    "ExecutablePath": "C:\\Launcher_Mollys\\delta-act-external-chair\\ACT_PRODUCT.exe",
-    "AssociatedExecutables": [
-      "ACT_PRODUCT.exe"
-    ],
-    "DisplayName": "Delta ACT External",
-    "Category": "Delta Force",
-    "Icon": "🎯",
-    "HttpErrorReason": null,
-    "HttpStatusCode": 0,
-    "HttpErrorTimestamp": null,
-    "NetworkErrorType": null
-  },
-  "delta-example-loader": {
-    "Version": "1.0",
-    "OriginalFileName": "DELTA_EXAMPLE.exe",
-    "LastCheck": null,
-    "DownloadUrl": "https://example.com/delta_example.exe",
-    "ExecutablePath": "C:\\Launcher_Mollys\\delta-example-loader\\DELTA_EXAMPLE.exe",
-    "AssociatedExecutables": [
-      "DELTA_EXAMPLE.exe"
-    ],
-    "DisplayName": "Delta Example Loader",
-    "Category": "Delta Force",
-    "Icon": "🎯",
-    "HttpErrorReason": null,
-    "HttpStatusCode": 0,
-    "HttpErrorTimestamp": null,
-    "NetworkErrorType": null
-  },
   "r6-x-zeroday-unlock-all": {
     "Version": "1.0",
     "OriginalFileName": "R6_UA.exe",
