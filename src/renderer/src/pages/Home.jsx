@@ -5,58 +5,81 @@ import ProductCard from '../components/ProductCard'
 
 export default function Home() {
   const navigate = useNavigate()
-  const [products, setProducts] = useState([])
+  const [categories, setCategories] = useState([])
   const [favorites, setFavorites] = useState([])
-  const [cacheSize, setCacheSize] = useState('0 B')
   const [filter, setFilter] = useState('all') // 'all' or 'favorites'
 
-  useEffect(() => {
-    // Load favorites and products
-    if (window.api) {
-      window.api.getFavorites().then(setFavorites)
-      window.api.getCacheSize().then(result => {
-        if (result.success) {
-          setCacheSize(result.sizeFormatted)
+  const loadProducts = async () => {
+    if (!window.api) return
+
+    const result = await window.api.getAllProducts()
+    if (result.success) {
+      // Group products by category
+      const categoryMap = new Map()
+
+      result.products.forEach(product => {
+        // Skip placeholders
+        if (product.id.includes('-placeholder')) return
+
+        const categoryName = product.category || 'Unknown'
+
+        if (!categoryMap.has(categoryName)) {
+          // Find the placeholder for this category to get icon/color
+          const placeholder = result.products.find(
+            p => p.id.includes('-placeholder') && p.category === categoryName
+          )
+
+          categoryMap.set(categoryName, {
+            id: categoryName.toLowerCase().replace(/\s+/g, '-'),
+            name: categoryName,
+            icon: placeholder?.icon || '🎮',
+            color: placeholder?.color || '#8b5cf6',
+            loaders: []
+          })
         }
+
+        categoryMap.get(categoryName).loaders.push(product)
       })
 
+      // Convert to array with loader count
+      const categoriesArray = Array.from(categoryMap.values()).map(cat => ({
+        ...cat,
+        exeCount: cat.loaders.length
+      }))
+
+      setCategories(categoriesArray)
+    }
+  }
+
+  useEffect(() => {
+    if (window.api) {
+      window.api.getFavorites().then(setFavorites)
+
       // Load products from loader_versions.json
-      window.api.getAllProducts().then(result => {
-        if (result.success) {
-          // Transform products to match UI format
-          const transformedProducts = result.products.map(product => ({
-            id: product.id,
-            name: product.name,
-            icon: product.icon,
-            description: product.category,
-            exeCount: product.executables.length,
-            isDownloaded: product.isDownloaded,
-            version: product.version
-          }))
-          setProducts(transformedProducts)
-        }
-      })
+      loadProducts()
 
       // Sync products with GitHub on load
       window.api.syncProductsWithGithub()
+
+      // Listen for product sync events (auto-refresh when GitHub data changes)
+      const unsubscribe = window.api.onLoaderProductsSynced(() => {
+        console.log('[Home] Products synced, refreshing...')
+        loadProducts()
+      })
+
+      return () => {
+        if (unsubscribe) unsubscribe()
+      }
     }
   }, [])
 
-  const handleProductClick = (productId) => {
-    navigate(`/product/${productId}`)
+  const handleCategoryClick = (categoryId) => {
+    navigate(`/category/${categoryId}`)
   }
 
-  const handleToggleFavorite = async (productId, e) => {
-    e.stopPropagation()
-    if (window.api) {
-      const newFavorites = await window.api.toggleFavorite(productId)
-      setFavorites(newFavorites)
-    }
-  }
-
-  const filteredProducts = filter === 'favorites'
-    ? products.filter(p => favorites.includes(p.id))
-    : products
+  const filteredCategories = filter === 'favorites'
+    ? categories.filter(c => favorites.includes(c.id))
+    : categories
 
   return (
     <div className="h-full flex overflow-hidden">
@@ -118,13 +141,13 @@ export default function Home() {
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden pl-8">
-        {/* Products grid */}
+        {/* Categories grid */}
         <div className="w-full flex-1 overflow-y-auto overflow-x-hidden scrollbar-hidden pt-6">
-          {filteredProducts.length === 0 ? (
+          {filteredCategories.length === 0 ? (
             <div className="h-full flex flex-col items-center justify-center text-center">
               <Star size={48} className="text-[var(--color-text-muted)] mb-4" />
               <p className="text-[var(--color-text-secondary)]">
-                {filter === 'favorites' ? 'No favorites yet' : 'No products available'}
+                {filter === 'favorites' ? 'No favorites yet' : 'No categories available'}
               </p>
               <p className="text-sm text-[var(--color-text-muted)]">
                 {filter === 'favorites' && 'Click the star icon to add favorites'}
@@ -132,11 +155,16 @@ export default function Home() {
             </div>
           ) : (
             <div className="flex flex-col gap-4 pb-4">
-              {filteredProducts.map((product, index) => (
+              {filteredCategories.map((category, index) => (
                 <ProductCard
-                  key={product.id}
-                  product={product}
-                  onClick={() => handleProductClick(product.id)}
+                  key={category.id}
+                  product={{
+                    id: category.id,
+                    name: category.name,
+                    icon: category.icon,
+                    exeCount: category.exeCount
+                  }}
+                  onClick={() => handleCategoryClick(category.id)}
                   style={{ animationDelay: `${index * 50}ms` }}
                 />
               ))}

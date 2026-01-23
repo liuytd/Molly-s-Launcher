@@ -1,4 +1,14 @@
 export default function ProductCard({ product, onClick, style }) {
+  // Check if icon is a URL (image) or emoji
+  const isImageIcon = product.icon && (
+    product.icon.startsWith('http://') ||
+    product.icon.startsWith('https://') ||
+    product.icon.startsWith('data:')
+  )
+
+  const defaultColor = '#8b5cf6'
+  const color = product.color || defaultColor
+
   return (
     <div
       onClick={onClick}
@@ -7,14 +17,29 @@ export default function ProductCard({ product, onClick, style }) {
     >
       {/* Icon */}
       <div
-        className="w-16 h-16 rounded-xl flex items-center justify-center text-3xl flex-shrink-0 ml-4"
+        className="w-16 h-16 rounded-xl flex items-center justify-center text-3xl flex-shrink-0 ml-4 overflow-hidden"
         style={{
-          background: `linear-gradient(135deg, ${product.color}20, ${product.color}40)`,
-          border: `1px solid ${product.color}50`,
-          boxShadow: `0 0 20px ${product.color}20`
+          background: `linear-gradient(135deg, ${color}20, ${color}40)`,
+          border: `1px solid ${color}50`,
+          boxShadow: `0 0 20px ${color}20`
         }}
       >
-        {product.icon}
+        {isImageIcon ? (
+          <img
+            src={product.icon}
+            alt={product.name}
+            className="w-10 h-10 object-contain"
+            onError={(e) => {
+              e.target.style.display = 'none'
+              e.target.nextSibling.style.display = 'flex'
+            }}
+          />
+        ) : (
+          <span>{product.icon || '🎮'}</span>
+        )}
+        {isImageIcon && (
+          <span style={{ display: 'none' }}>🎮</span>
+        )}
       </div>
 
       {/* Content */}
@@ -23,14 +48,14 @@ export default function ProductCard({ product, onClick, style }) {
           {product.name}
         </h3>
         <p className="text-sm text-[var(--color-text-muted)] mt-1">
-          {product.exeCount} product{product.exeCount !== 1 ? 's' : ''}
+          {product.exeCount} loader{product.exeCount !== 1 ? 's' : ''}
         </p>
       </div>
 
       {/* Left border indicator */}
       <div
         className="absolute left-0 top-0 bottom-0 w-0 group-hover:w-1 transition-all duration-300 rounded-l-xl"
-        style={{ background: product.color }}
+        style={{ background: color }}
       />
     </div>
   )

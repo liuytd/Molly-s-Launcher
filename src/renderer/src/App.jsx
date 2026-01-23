@@ -8,6 +8,7 @@ import SplashScreen from './components/SplashScreen'
 import UpdatePopup from './components/UpdatePopup'
 import Home from './pages/Home'
 import Product from './pages/Product'
+import Category from './pages/Category'
 
 function PageTransition({ children }) {
   const location = useLocation()
@@ -39,6 +40,7 @@ function AppContent() {
         <PageTransition>
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/category/:categoryId" element={<Category />} />
             <Route path="/product/:productId" element={<Product />} />
           </Routes>
         </PageTransition>

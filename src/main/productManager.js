@@ -452,6 +452,9 @@ function fetchJSON(url) {
 
 function sendToRenderer(channel, data = {}) {
   if (mainWindow && !mainWindow.isDestroyed()) {
+    log.info(`[ProductManager] Sending to renderer: ${channel}`)
     mainWindow.webContents.send(channel, data)
+  } else {
+    log.warn(`[ProductManager] Cannot send ${channel}: mainWindow not available`)
   }
 }

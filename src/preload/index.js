@@ -49,13 +49,37 @@ const api = {
   syncProductsWithGithub: () => ipcRenderer.invoke('products:syncWithGithub'),
   downloadLoader: (productId) => ipcRenderer.invoke('products:downloadLoader', productId),
 
-  // Loader update events
-  onLoaderUpdatesAvailable: (callback) => ipcRenderer.on('loader:updates-available', (_, data) => callback(data)),
-  onLoaderDownloadStarted: (callback) => ipcRenderer.on('loader:download-started', (_, data) => callback(data)),
-  onLoaderDownloadProgress: (callback) => ipcRenderer.on('loader:download-progress', (_, data) => callback(data)),
-  onLoaderDownloadComplete: (callback) => ipcRenderer.on('loader:download-complete', (_, data) => callback(data)),
-  onLoaderDownloadError: (callback) => ipcRenderer.on('loader:download-error', (_, data) => callback(data)),
-  onLoaderProductsSynced: (callback) => ipcRenderer.on('loader:products-synced', (_, data) => callback(data)),
+  // Loader update events (return unsubscribe functions)
+  onLoaderUpdatesAvailable: (callback) => {
+    const handler = (_, data) => callback(data)
+    ipcRenderer.on('loader:updates-available', handler)
+    return () => ipcRenderer.removeListener('loader:updates-available', handler)
+  },
+  onLoaderDownloadStarted: (callback) => {
+    const handler = (_, data) => callback(data)
+    ipcRenderer.on('loader:download-started', handler)
+    return () => ipcRenderer.removeListener('loader:download-started', handler)
+  },
+  onLoaderDownloadProgress: (callback) => {
+    const handler = (_, data) => callback(data)
+    ipcRenderer.on('loader:download-progress', handler)
+    return () => ipcRenderer.removeListener('loader:download-progress', handler)
+  },
+  onLoaderDownloadComplete: (callback) => {
+    const handler = (_, data) => callback(data)
+    ipcRenderer.on('loader:download-complete', handler)
+    return () => ipcRenderer.removeListener('loader:download-complete', handler)
+  },
+  onLoaderDownloadError: (callback) => {
+    const handler = (_, data) => callback(data)
+    ipcRenderer.on('loader:download-error', handler)
+    return () => ipcRenderer.removeListener('loader:download-error', handler)
+  },
+  onLoaderProductsSynced: (callback) => {
+    const handler = (_, data) => callback(data)
+    ipcRenderer.on('loader:products-synced', handler)
+    return () => ipcRenderer.removeListener('loader:products-synced', handler)
+  },
 
   // Remove listeners
   removeAllListeners: (channel) => ipcRenderer.removeAllListeners(channel)

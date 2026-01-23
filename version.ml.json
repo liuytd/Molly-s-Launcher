@@ -1,11 +1,11 @@
 {
-  "version": "1.3.1",
-  "downloadUrl": "https://github.com/liuytd/Molly-s-Launcher/releases/download/v1.3.1/MollysLauncher-setup.exe",
+  "version": "1.3.2",
+  "downloadUrl": "https://github.com/liuytd/Molly-s-Launcher/releases/download/v1.3.2/MollysLauncher-setup.exe",
   "changelog": [
-    "Auto loader version check every 5 minutes",
-    "Auto download updates for downloaded loaders",
-    "GitHub API for instant version detection",
-    "Download progress tracking"
+    "Categories view - Home shows game categories",
+    "Click category to see loaders",
+    "Support for image URLs as icons",
+    "Auto-refresh when GitHub data changes",
+    "Fixed loader sync issues"
   ]
 }
-
