@@ -1,10 +1,10 @@
 {
-  "version": "1.2.4",
-  "downloadUrl": "https://github.com/liuytd/Molly-s-Launcher/releases/download/v1.2.4/MollysLauncher-setup.exe",
+  "version": "1.2.5",
+  "downloadUrl": "https://github.com/liuytd/Molly-s-Launcher/releases/download/v1.2.5/MollysLauncher-setup.exe",
   "changelog": [
-    "Removed separator lines for cleaner design",
-    "Reduced spacing between game cards",
-    "Improved card positioning and layout"
+    "Removed titlebar border line",
+    "Centered game cards properly",
+    "Fixed card alignment"
   ]
 }
 

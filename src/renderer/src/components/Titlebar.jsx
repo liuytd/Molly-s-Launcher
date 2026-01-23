@@ -19,7 +19,7 @@ export default function Titlebar() {
   }
 
   return (
-    <div className="titlebar-drag h-10 flex items-center justify-center px-4 bg-gradient-to-r from-[#0a0a0f] via-[#12121a] to-[#0a0a0f] border-b border-[var(--color-border)] relative">
+    <div className="titlebar-drag h-10 flex items-center justify-center px-4 bg-gradient-to-r from-[#0a0a0f] via-[#12121a] to-[#0a0a0f] relative">
       {/* Title - Centered */}
       <div className="flex items-center gap-2 absolute left-1/2 transform -translate-x-1/2">
         <span className="text-sm font-semibold tracking-widest text-glow text-[var(--color-primary)]">
