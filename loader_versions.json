@@ -50,23 +50,6 @@
     "HttpErrorTimestamp": null,
     "NetworkErrorType": null
   },
-  "rust-act-external-chair": {
-    "Version": "1.0",
-    "OriginalFileName": "ACT_PRODUCT.exe",
-    "LastCheck": null,
-    "DownloadUrl": "https://api.cloud.anewvision.fr/280388361904979970/loader/ACT_PRODUCT.exe",
-    "ExecutablePath": "C:\\Launcher_Mollys\\rust-act-external-chair\\ACT_PRODUCT.exe",
-    "AssociatedExecutables": [
-      "ACT_PRODUCT.exe"
-    ],
-    "DisplayName": "Rust ACT External",
-    "Category": "Rust",
-    "Icon": "🔧",
-    "HttpErrorReason": null,
-    "HttpStatusCode": 0,
-    "HttpErrorTimestamp": null,
-    "NetworkErrorType": null
-  },
   "r6-x-zeroday-unlock-all": {
     "Version": "1.0",
     "OriginalFileName": "R6_UA.exe",
