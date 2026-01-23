@@ -16,6 +16,23 @@
     "HttpErrorTimestamp": null,
     "NetworkErrorType": null
   },
+  "delta-example-loader": {
+    "Version": "1.0",
+    "OriginalFileName": "DELTA_EXAMPLE.exe",
+    "LastCheck": null,
+    "DownloadUrl": "https://example.com/delta_example.exe",
+    "ExecutablePath": "C:\\Launcher_Mollys\\delta-example-loader\\DELTA_EXAMPLE.exe",
+    "AssociatedExecutables": [
+      "DELTA_EXAMPLE.exe"
+    ],
+    "DisplayName": "Delta Example Loader",
+    "Category": "Delta Force",
+    "Icon": "🎯",
+    "HttpErrorReason": null,
+    "HttpStatusCode": 0,
+    "HttpErrorTimestamp": null,
+    "NetworkErrorType": null
+  },
   "dayz-act-external-chair": {
     "Version": "1.0",
     "OriginalFileName": "ACT_PRODUCT.exe",
