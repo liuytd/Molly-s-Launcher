@@ -67,23 +67,6 @@
     "HttpErrorTimestamp": null,
     "NetworkErrorType": null
   },
-  "bo6-spectre-external": {
-    "Version": "1.0",
-    "OriginalFileName": "SPECTRE.exe",
-    "LastCheck": null,
-    "DownloadUrl": "https://api.cloud.anewvision.fr/280388361904979970/loader/SPECTRE.exe",
-    "ExecutablePath": "C:\\Launcher_Mollys\\bo6-spectre-external\\SPECTRE.exe",
-    "AssociatedExecutables": [
-      "SPECTRE.exe"
-    ],
-    "DisplayName": "BO6 Spectre External",
-    "Category": "Black Ops 6",
-    "Icon": "👻",
-    "HttpErrorReason": null,
-    "HttpStatusCode": 0,
-    "HttpErrorTimestamp": null,
-    "NetworkErrorType": null
-  },
   "mwiii-zenith-internal": {
     "Version": "1.0",
     "OriginalFileName": "mw3_client.exe",
@@ -101,23 +84,6 @@
     "HttpErrorTimestamp": null,
     "NetworkErrorType": null
   },
-  "bo6-tren-external": {
-    "Version": "1.0",
-    "OriginalFileName": "TREN.exe",
-    "LastCheck": null,
-    "DownloadUrl": "https://api.cloud.anewvision.fr/280388361904979970/loader/TREN.exe",
-    "ExecutablePath": "C:\\Launcher_Mollys\\bo6-tren-external\\TREN.exe",
-    "AssociatedExecutables": [
-      "TREN.exe"
-    ],
-    "DisplayName": "BO6 Tren External",
-    "Category": "Black Ops 6",
-    "Icon": "💉",
-    "HttpErrorReason": null,
-    "HttpStatusCode": 0,
-    "HttpErrorTimestamp": null,
-    "NetworkErrorType": null
-  },
   "fc26-external-chair": {
     "Version": "1.0",
     "OriginalFileName": "FC26.exe",
@@ -130,23 +96,6 @@
     "DisplayName": "FC26 External",
     "Category": "FC 26",
     "Icon": "⚽",
-    "HttpErrorReason": null,
-    "HttpStatusCode": 0,
-    "HttpErrorTimestamp": null,
-    "NetworkErrorType": null
-  },
-  "bo6-aim-external": {
-    "Version": "1.0",
-    "OriginalFileName": "AIMEXT.exe",
-    "LastCheck": null,
-    "DownloadUrl": "https://api.cloud.anewvision.fr/280388361904979970/loader/AIMEXT.exe",
-    "ExecutablePath": "C:\\Launcher_Mollys\\bo6-aim-external\\AIMEXT.exe",
-    "AssociatedExecutables": [
-      "AIMEXT.exe"
-    ],
-    "DisplayName": "BO6 Aim External",
-    "Category": "Black Ops 6",
-    "Icon": "🎯",
     "HttpErrorReason": null,
     "HttpStatusCode": 0,
     "HttpErrorTimestamp": null,
