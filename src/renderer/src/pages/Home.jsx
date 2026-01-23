@@ -117,9 +117,9 @@ export default function Home() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col items-center overflow-hidden">
+      <div className="flex-1 flex flex-col overflow-hidden pl-8">
         {/* Products grid */}
-        <div className="w-full flex-1 overflow-y-auto overflow-x-hidden scrollbar-hidden pt-4">
+        <div className="w-full flex-1 overflow-y-auto overflow-x-hidden scrollbar-hidden pt-6">
           {filteredProducts.length === 0 ? (
             <div className="h-full flex flex-col items-center justify-center text-center">
               <Star size={48} className="text-[var(--color-text-muted)] mb-4" />
@@ -131,7 +131,7 @@ export default function Home() {
               </p>
             </div>
           ) : (
-            <div className="flex flex-col items-center gap-3 pb-4">
+            <div className="flex flex-col gap-3 pb-4">
               {filteredProducts.map((product, index) => (
                 <ProductCard
                   key={product.id}

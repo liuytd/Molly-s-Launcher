@@ -18,8 +18,8 @@ export default function ProductCard({ product, onClick, style }) {
       </div>
 
       {/* Content */}
-      <div className="flex-1 min-w-0 text-center">
-        <h3 className="text-sm font-medium text-[var(--color-text)] truncate">
+      <div className="flex-1 min-w-0 flex flex-col items-center justify-center">
+        <h3 className="text-sm font-medium text-[var(--color-text)] truncate w-full text-center">
           {product.name}
         </h3>
         <p className="text-xs text-[var(--color-text-muted)] mt-0.5">
