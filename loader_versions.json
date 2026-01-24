@@ -34,5 +34,24 @@
     "HttpStatusCode": 0,
     "HttpErrorTimestamp": null,
     "NetworkErrorType": null
+  },
+  "rust-placeholder": {
+    "Version": "1.0",
+    "OriginalFileName": "PLACEHOLDER.exe",
+    "LastCheck": null,
+    "DownloadUrl": "",
+    "ExecutablePath": "C:\\Launcher_Mollys\\rust-placeholder\\PLACEHOLDER.exe",
+    "AssociatedExecutables": [
+      "PLACEHOLDER.exe"
+    ],
+    "DisplayName": "RUST (Placeholder)",
+    "Category": "RUST",
+    "Icon": "https://raw.githubusercontent.com/liuytd/Molly-s-Launcher/main/ML_CATEGORIES/RUST.png",
+    "Color": "#8b5cf6",
+    "HttpErrorReason": null,
+    "HttpStatusCode": 0,
+    "HttpErrorTimestamp": null,
+    "NetworkErrorType": null,
+    "IsPlaceholder": true
   }
 }
