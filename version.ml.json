@@ -1,8 +1,8 @@
 {
-  "version": "1.3.9",
-  "downloadUrl": "https://github.com/liuytd/Molly-s-Launcher/releases/download/v1.3.9/MollysLauncher-setup.exe",
+  "version": "1.3.10",
+  "downloadUrl": "https://github.com/liuytd/Molly-s-Launcher/releases/download/v1.3.10/MollysLauncher-setup.exe",
   "changelog": [
-    "New loader auto-detection: shows popup, downloads and restarts automatically",
-    "Same behavior as launcher updates for new loaders"
+    "Auto-redownload loaders if folder is empty or missing .exe files",
+    "Detects and fixes missing loaders automatically"
   ]
 }

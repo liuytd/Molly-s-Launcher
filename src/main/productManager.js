@@ -1,6 +1,6 @@
 import { ipcMain, app } from 'electron'
 import { join, dirname } from 'path'
-import { existsSync, mkdirSync, readFileSync, writeFileSync, createWriteStream, unlinkSync } from 'fs'
+import { existsSync, mkdirSync, readFileSync, writeFileSync, createWriteStream, unlinkSync, readdirSync } from 'fs'
 import { get as httpsGet, request as httpsRequest } from 'https'
 import { get as httpGet } from 'http'
 import { spawn } from 'child_process'
@@ -100,7 +100,7 @@ async function checkAndDownloadNewLoaders() {
       }
     }
 
-    // Also check for loaders that exist locally but are not downloaded
+    // Also check for loaders that exist locally but are not downloaded or folder is empty
     const notDownloadedLoaders = []
     for (const [id, product] of Object.entries(remoteData)) {
       if (id.includes('-placeholder') || product.IsPlaceholder) continue
@@ -109,14 +109,37 @@ async function checkAndDownloadNewLoaders() {
       const productFolder = join(MOLLY_FOLDER, id)
       const exePath = join(productFolder, product.OriginalFileName || '')
 
-      // If loader exists in local JSON but file is not downloaded
-      if (localData[id] && !existsSync(exePath)) {
-        notDownloadedLoaders.push({
-          id,
-          name: product.DisplayName || id,
-          downloadUrl: product.DownloadUrl,
-          fileName: product.OriginalFileName
-        })
+      // Check if folder exists
+      const folderExists = existsSync(productFolder)
+
+      // Check if folder is empty or has no .exe files
+      let folderIsEmpty = false
+      let hasNoExe = false
+      if (folderExists) {
+        try {
+          const files = readdirSync(productFolder)
+          folderIsEmpty = files.length === 0
+          hasNoExe = !files.some(f => f.toLowerCase().endsWith('.exe'))
+        } catch (e) {
+          log.warn(`[ProductManager] Could not read folder ${productFolder}: ${e.message}`)
+        }
+      }
+
+      // If loader exists in local JSON but:
+      // - file is not downloaded, OR
+      // - folder is empty, OR
+      // - folder has no .exe files
+      if (localData[id] && (!existsSync(exePath) || folderIsEmpty || hasNoExe)) {
+        // Skip if already in newLoaders list
+        if (!newLoaders.find(l => l.id === id)) {
+          log.info(`[ProductManager] Loader ${id} needs redownload: exeExists=${existsSync(exePath)}, folderEmpty=${folderIsEmpty}, noExe=${hasNoExe}`)
+          notDownloadedLoaders.push({
+            id,
+            name: product.DisplayName || id,
+            downloadUrl: product.DownloadUrl,
+            fileName: product.OriginalFileName
+          })
+        }
       }
     }
 
