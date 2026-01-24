@@ -1,8 +1,9 @@
-import { ipcMain } from 'electron'
+import { ipcMain, app } from 'electron'
 import { join, dirname } from 'path'
 import { existsSync, mkdirSync, readFileSync, writeFileSync, createWriteStream, unlinkSync } from 'fs'
 import { get as httpsGet, request as httpsRequest } from 'https'
 import { get as httpGet } from 'http'
+import { spawn } from 'child_process'
 import log from 'electron-log'
 
 // Use GitHub API to avoid CDN caching issues
@@ -17,6 +18,7 @@ const CHECK_INTERVAL = 5 * 60 * 1000
 
 let mainWindow = null
 let checkInterval = null
+let isDownloadingNewLoaders = false
 
 export function setupProductManager(window) {
   mainWindow = window
@@ -52,18 +54,142 @@ function startAutoCheck() {
   // Initial sync and download after 5 seconds
   setTimeout(async () => {
     log.info('[ProductManager] Running initial sync and download...')
-    await syncProductsWithGithub()
-    await downloadAllLoaders()
-    sendToRenderer('loader:products-synced')
+    await checkAndDownloadNewLoaders()
   }, 5000)
 
   // Then check every 5 minutes
   checkInterval = setInterval(async () => {
     log.info('[ProductManager] Running scheduled loader version check...')
-    await silentCheckForLoaderUpdates()
+    await checkAndDownloadNewLoaders()
   }, CHECK_INTERVAL)
 
   log.info(`[ProductManager] Auto-check started (every ${CHECK_INTERVAL / 60000} minutes)`)
+}
+
+// Check for new loaders, download them and restart the app
+async function checkAndDownloadNewLoaders() {
+  if (isDownloadingNewLoaders) {
+    log.info('[ProductManager] Already downloading new loaders, skipping...')
+    return
+  }
+
+  try {
+    const remoteData = await fetchLoaderVersionsFromAPI()
+
+    // Get local data (or empty object if first time)
+    let localData = {}
+    if (existsSync(LOCAL_LOADER_VERSIONS)) {
+      localData = JSON.parse(readFileSync(LOCAL_LOADER_VERSIONS, 'utf-8'))
+    }
+
+    // Find NEW loaders (exist in remote but not in local, excluding placeholders)
+    const newLoaders = []
+    for (const [id, product] of Object.entries(remoteData)) {
+      // Skip placeholders
+      if (id.includes('-placeholder') || product.IsPlaceholder) continue
+      // Skip if no download URL
+      if (!product.DownloadUrl) continue
+      // Check if this is a NEW loader (not in local data)
+      if (!localData[id]) {
+        newLoaders.push({
+          id,
+          name: product.DisplayName || id,
+          downloadUrl: product.DownloadUrl,
+          fileName: product.OriginalFileName
+        })
+      }
+    }
+
+    // Also check for loaders that exist locally but are not downloaded
+    const notDownloadedLoaders = []
+    for (const [id, product] of Object.entries(remoteData)) {
+      if (id.includes('-placeholder') || product.IsPlaceholder) continue
+      if (!product.DownloadUrl) continue
+
+      const productFolder = join(MOLLY_FOLDER, id)
+      const exePath = join(productFolder, product.OriginalFileName || '')
+
+      // If loader exists in local JSON but file is not downloaded
+      if (localData[id] && !existsSync(exePath)) {
+        notDownloadedLoaders.push({
+          id,
+          name: product.DisplayName || id,
+          downloadUrl: product.DownloadUrl,
+          fileName: product.OriginalFileName
+        })
+      }
+    }
+
+    const allLoadersToDownload = [...newLoaders, ...notDownloadedLoaders]
+
+    if (allLoadersToDownload.length > 0) {
+      isDownloadingNewLoaders = true
+
+      const loaderNames = allLoadersToDownload.map(l => l.name).join(', ')
+      log.info(`[ProductManager] New loaders detected: ${loaderNames}`)
+
+      // Send notification to renderer - show popup
+      sendToRenderer('loader:new-loaders-detected', {
+        loaders: allLoadersToDownload,
+        count: allLoadersToDownload.length,
+        names: loaderNames
+      })
+
+      // Sync first to update local JSON
+      await syncProductsWithGithub()
+
+      // Download all new loaders
+      for (const loader of allLoadersToDownload) {
+        log.info(`[ProductManager] Downloading new loader: ${loader.name}`)
+        sendToRenderer('loader:downloading-new', {
+          id: loader.id,
+          name: loader.name,
+          current: allLoadersToDownload.indexOf(loader) + 1,
+          total: allLoadersToDownload.length
+        })
+
+        try {
+          await downloadLoaderFile(loader.id, loader.downloadUrl, loader.fileName)
+          log.info(`[ProductManager] Successfully downloaded ${loader.name}`)
+        } catch (error) {
+          log.error(`[ProductManager] Failed to download ${loader.name}:`, error)
+        }
+      }
+
+      log.info('[ProductManager] All new loaders downloaded, restarting app...')
+      sendToRenderer('loader:restarting', { message: 'Restarting to apply changes...' })
+
+      // Wait a moment for UI to update, then restart
+      setTimeout(() => {
+        restartApp()
+      }, 2000)
+
+    } else {
+      // No new loaders, just sync and check for updates
+      await syncProductsWithGithub()
+      await silentCheckForLoaderUpdates()
+      sendToRenderer('loader:products-synced')
+    }
+
+  } catch (error) {
+    log.error('[ProductManager] Error checking for new loaders:', error)
+    isDownloadingNewLoaders = false
+  }
+}
+
+// Restart the application
+function restartApp() {
+  const appPath = app.getPath('exe')
+  log.info(`[ProductManager] Restarting app from: ${appPath}`)
+
+  // Spawn a new instance
+  spawn(appPath, [], {
+    detached: true,
+    stdio: 'ignore'
+  }).unref()
+
+  // Quit current instance
+  app.quit()
 }
 
 async function downloadAllLoaders() {

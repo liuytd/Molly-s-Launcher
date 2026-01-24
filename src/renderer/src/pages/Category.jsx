@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { ArrowLeft, Download, Play, Star, Loader2 } from 'lucide-react'
 import { toast } from 'react-toastify'
+import categoryIconsData from '../../../../category_icons.json'
 
 export default function Category() {
   const { categoryId } = useParams()
@@ -10,6 +11,16 @@ export default function Category() {
   const [loaders, setLoaders] = useState([])
   const [favorites, setFavorites] = useState([])
   const [downloadingLoaders, setDownloadingLoaders] = useState({})
+
+  // Get icon URL from category_icons.json
+  const getCategoryIcon = (categoryName) => {
+    const icons = categoryIconsData.icons || {}
+    // Try exact match first
+    if (icons[categoryName]) return icons[categoryName]
+    // Try case-insensitive match
+    const key = Object.keys(icons).find(k => k.toLowerCase() === categoryName.toLowerCase())
+    return key ? icons[key] : null
+  }
 
   useEffect(() => {
     loadCategoryData()
@@ -34,11 +45,14 @@ export default function Category() {
         p.category?.toLowerCase().replace(/\s+/g, '-') === categoryId
       )
 
+      const categoryName = placeholder?.category || categoryLoaders[0]?.category || categoryId
+      const iconUrl = getCategoryIcon(categoryName)
+
       if (categoryLoaders.length > 0 || placeholder) {
         setCategory({
           id: categoryId,
-          name: placeholder?.category || categoryLoaders[0]?.category || categoryId,
-          icon: placeholder?.icon || '🎮',
+          name: categoryName,
+          icon: iconUrl || placeholder?.icon || '🎮',
           color: placeholder?.color || '#8b5cf6'
         })
         setLoaders(categoryLoaders)

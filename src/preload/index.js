@@ -83,6 +83,23 @@ const api = {
     return () => ipcRenderer.removeListener('loader:products-synced', handler)
   },
 
+  // New loaders detection events
+  onNewLoadersDetected: (callback) => {
+    const handler = (_, data) => callback(data)
+    ipcRenderer.on('loader:new-loaders-detected', handler)
+    return () => ipcRenderer.removeListener('loader:new-loaders-detected', handler)
+  },
+  onDownloadingNewLoader: (callback) => {
+    const handler = (_, data) => callback(data)
+    ipcRenderer.on('loader:downloading-new', handler)
+    return () => ipcRenderer.removeListener('loader:downloading-new', handler)
+  },
+  onAppRestarting: (callback) => {
+    const handler = (_, data) => callback(data)
+    ipcRenderer.on('loader:restarting', handler)
+    return () => ipcRenderer.removeListener('loader:restarting', handler)
+  },
+
   // Remove listeners
   removeAllListeners: (channel) => ipcRenderer.removeAllListeners(channel)
 }

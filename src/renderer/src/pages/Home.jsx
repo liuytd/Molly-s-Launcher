@@ -2,12 +2,23 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Star, MessageCircle, Globe, Key, LayoutGrid } from 'lucide-react'
 import ProductCard from '../components/ProductCard'
+import categoryIconsData from '../../../../category_icons.json'
 
 export default function Home() {
   const navigate = useNavigate()
   const [categories, setCategories] = useState([])
   const [favorites, setFavorites] = useState([])
   const [filter, setFilter] = useState('all') // 'all' or 'favorites'
+
+  // Get icon URL from category_icons.json
+  const getCategoryIcon = (categoryName) => {
+    const icons = categoryIconsData.icons || {}
+    // Try exact match first
+    if (icons[categoryName]) return icons[categoryName]
+    // Try case-insensitive match
+    const key = Object.keys(icons).find(k => k.toLowerCase() === categoryName.toLowerCase())
+    return key ? icons[key] : null
+  }
 
   const loadProducts = async () => {
     if (!window.api) return
@@ -24,15 +35,18 @@ export default function Home() {
         const categoryName = product.category || 'Unknown'
 
         if (!categoryMap.has(categoryName)) {
-          // Find the placeholder for this category to get icon/color
+          // Find the placeholder for this category to get color
           const placeholder = result.products.find(
             p => p.id.includes('-placeholder') && p.category === categoryName
           )
 
+          // Get icon from category_icons.json (PNG URL) or fallback to emoji
+          const iconUrl = getCategoryIcon(categoryName)
+
           categoryMap.set(categoryName, {
             id: categoryName.toLowerCase().replace(/\s+/g, '-'),
             name: categoryName,
-            icon: placeholder?.icon || '🎮',
+            icon: iconUrl || placeholder?.icon || '🎮',
             color: placeholder?.color || '#8b5cf6',
             loaders: []
           })

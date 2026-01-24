@@ -118,6 +118,22 @@ export default function App() {
         setIsLoading(true)
         setLoadingText('INSTALLING UPDATE...')
       })
+
+      // Listen for new loaders detection
+      window.api.onNewLoadersDetected((data) => {
+        setIsLoading(true)
+        setLoadingText(`NEW LOADER${data.count > 1 ? 'S' : ''} DETECTED!`)
+      })
+
+      window.api.onDownloadingNewLoader((data) => {
+        setIsLoading(true)
+        setLoadingText(`DOWNLOADING ${data.name.toUpperCase()}... (${data.current}/${data.total})`)
+      })
+
+      window.api.onAppRestarting(() => {
+        setIsLoading(true)
+        setLoadingText('RESTARTING...')
+      })
     }
 
     return () => {
@@ -125,6 +141,9 @@ export default function App() {
         window.api.removeAllListeners('updater:available')
         window.api.removeAllListeners('updater:downloaded')
         window.api.removeAllListeners('updater:progress')
+        window.api.removeAllListeners('loader:new-loaders-detected')
+        window.api.removeAllListeners('loader:downloading-new')
+        window.api.removeAllListeners('loader:restarting')
       }
     }
   }, [])
